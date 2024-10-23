@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            line-height: 1.5;
+        }
+        .question-section {
+            margin-bottom: 2rem;
+            padding: 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            background-color: #f8fafc;
+        }
+        .options {
+            margin-top: 1rem;
+        }
+        .option {
+            display: block;
+            margin: 0.5rem 0;
+            padding: 0.5rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.25rem;
+            cursor: pointer;
+        }
+        .option:hover {
+            background-color: #e2e8f0;
+        }
+        .option input {
+            margin-right: 0.5rem;
+        }
+        button {
+            background-color: #2563eb;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        button:hover {
+            background-color: #1d4ed8;
+        }
+        #results {
+            margin-top: 2rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            display: none;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 0.5rem;
+            background-color: #e2e8f0;
+            border-radius: 0.25rem;
+            margin: 1rem 0;
+        }
+        .progress {
+            height: 100%;
+            background-color: #2563eb;
+            border-radius: 0.25rem;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <h1>Nonprofit Organizational State Assessment</h1>
+    <p>This assessment will help determine if your organization is in a Start Up, Tune Up, or Level Up state. Answer each question based on your current organizational situation.</p>
+    
+    <div class="progress-bar">
+        <div class="progress" style="width: 0%"></div>
+    </div>
+
+    <form id="assessment-form">
+        <div class="question-section" data-section="mission">
+            <h2>Mission Impact & Position</h2>
+            
+            <div class="question">
+                <p><strong>1. Program Model Status:</strong> How would you characterize your program model?</p>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="program_model" value="startup" required>
+                        Still defining our program approach and testing different methods
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="program_model" value="tuneup">
+                        Have established programs but seeing declining impact or effectiveness
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="program_model" value="levelup">
+                        Strong program model with clear opportunities for expansion
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question">
+                <p><strong>2. Ecosystem Position:</strong> How would you describe your position in the nonprofit ecosystem?</p>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="ecosystem_position" value="startup" required>
+                        Still establishing our niche and building initial partnerships
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="ecosystem_position" value="tuneup">
+                        Established but struggling to maintain relevance or partnerships
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="ecosystem_position" value="levelup">
+                        Strong network with opportunities for greater collaboration
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="question-section" data-section="operations">
+            <h2>Operations & Processes</h2>
+            
+            <div class="question">
+                <p><strong>3. Organizational Processes:</strong> How developed are your operational processes?</p>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="processes" value="startup" required>
+                        Currently developing and documenting core processes
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="processes" value="tuneup">
+                        Processes exist but create inefficiencies or friction
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="processes" value="levelup">
+                        Well-defined processes with room for scaling
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question">
+                <p><strong>4. Program Delivery Systems:</strong> What is the state of your program delivery infrastructure?</p>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="delivery_systems" value="startup" required>
+                        Basic or minimal systems still being developed
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="delivery_systems" value="tuneup">
+                        Outdated systems needing significant updates
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="delivery_systems" value="levelup">
+                        Robust systems ready for expansion
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="question-section" data-section="financial">
+            <h2>Financial Sustainability</h2>
+            
+            <div class="question">
+                <p><strong>5. Funding Status:</strong> How would you characterize your funding situation?</p>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="funding" value="startup" required>
+                        Seeking initial funding sources and stability
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="funding" value="tuneup">
+                        Experiencing declining or unstable funding
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="funding" value="levelup">
+                        Stable funding with growth opportunities
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question">
+                <p><strong>6. Resource Allocation:</strong> How efficient is your resource allocation?</p>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="resources" value="startup" required>
+                        High investment in program development, seeking stability
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="resources" value="tuneup">
+                        Rising overhead costs, declining program ratio
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="resources" value="levelup">
+                        Efficient allocation with optimization potential
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="question-section" data-section="team">
+            <h2>Team & Culture</h2>
+            
+            <div class="question">
+                <p><strong>7. Organizational Structure:</strong> How would you describe your current structure?</p>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="structure" value="startup" required>
+                        Forming structure, primarily volunteer-driven
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="structure" value="tuneup">
+                        Structure exists but causes strain or turnover
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="structure" value="levelup">
+                        Balanced structure ready for growth
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question">
+                <p><strong>8. Human Resources:</strong> What is the state of your team?</p>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="team" value="startup" required>
+                        Building core team and board
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="team" value="tuneup">
+                        Experiencing engagement or retention issues
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="team" value="levelup">
+                        Strong team with capacity to grow
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="question-section" data-section="community">
+            <h2>Community & Stakeholders</h2>
+            
+            <div class="question">
+                <p><strong>9. Stakeholder Relationships:</strong> How would you characterize your stakeholder engagement?</p>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="stakeholders" value="startup" required>
+                        Building initial community trust and relationships
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="stakeholders" value="tuneup">
+                        Declining engagement or support
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="stakeholders" value="levelup">
+                        Strong relationships with growth potential
+                    </label>
+                </div>
+            </div>
+            
+            <div class="question">
+                <p><strong>10. Impact Opportunity:</strong> What is your impact potential?</p>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="impact" value="startup" required>
+                        Still validating community need and approach
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="impact" value="tuneup">
+                        Facing challenges in program effectiveness
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="impact" value="levelup">
+                        Clear opportunities for expanded impact
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit">Calculate Results</button>
+    </form>
+
+    <div id="results"></div>
+
+    <script>
+        document.getElementById('assessment-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const results = {
+                startup: 0,
+                tuneup: 0,
+                levelup: 0
+            };
+            
+            // Count responses
+            for (let [name, value] of formData.entries()) {
+                results[value]++;
+            }
+            
+            // Determine primary state
+            let primaryState = Object.keys(results).reduce((a, b) => 
+                results[a] > results[b] ? a : b
+            );
+            
+            // Calculate percentages
+            const total = Object.values(results).reduce((a, b) => a + b);
+            const percentages = {
+                startup: ((results.startup / total) * 100).toFixed(1),
+                tuneup: ((results.tuneup / total) * 100).toFixed(1),
+                levelup: ((results.levelup / total) * 100).toFixed(1)
+            };
+            
+            // Generate recommendation text
+            const stateDescriptions = {
+                startup: "Your organization shows characteristics of a Start Up phase. Focus on establishing core programs, building initial relationships, and developing fundamental processes.",
+                tuneup: "Your organization appears to be in need of a Tune Up. Priority should be given to improving efficiency, rebuilding engagement, and updating systems and processes.",
+                levelup: "Your organization demonstrates Level Up characteristics. You're well-positioned to focus on growth, expansion, and increasing your impact."
+            };
+            
+            // Display results
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `
+                <h2>Assessment Results</h2>
+                <p><strong>Primary Organizational State: ${primaryState.toUpperCase()}</strong></p>
+                <p>${stateDescriptions[primaryState]}</p>
+                <h3>Breakdown:</h3>
+                <ul>
+                    <li>Start Up: ${percentages.startup}%</li>
+                    <li>Tune Up: ${percentages.tuneup}%</li>
+                    <li>Level Up: ${percentages.levelup}%</li>
+                </ul>
+            `;
+            resultsDiv.style.display = 'block';
+            resultsDiv.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Update progress bar as questions are answered
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', updateProgress);
+        });
+
+        function updateProgress() {
+            const totalQuestions = 10;
+            const answeredQuestions = document.querySelectorAll('input[type="radio"]:checked').length;
+            const progress = (answeredQuestions / totalQuestions) * 100;
+            document.querySelector('.progress').style.width = `${progress}%`;
+        }
+    </script>
+</body>
+</html>
