@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            line-height: 1.5;
+        }
+        .question-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            background-color: #f8fafc;
+        }
+        .question {
+            margin-bottom: 1.5rem;
+        }
+        .guidance {
+            font-size: 0.875rem;
+            color: #64748b;
+            margin: 0.5rem 0 1rem 0;
+            padding: 0.75rem;
+            background-color: #f1f5f9;
+            border-radius: 0.25rem;
+        }
+        textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 0.75rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.25rem;
+            margin-top: 0.5rem;
+            font-family: inherit;
+            line-height: 1.5;
+            resize: vertical;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        button {
+            background-color: #2563eb;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 1rem;
+        }
+        button:hover {
+            background-color: #1d4ed8;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 0.5rem;
+            background-color: #e2e8f0;
+            border-radius: 0.25rem;
+            margin: 1rem 0;
+        }
+        .progress {
+            height: 100%;
+            background-color: #2563eb;
+            border-radius: 0.25rem;
+            transition: width 0.3s ease;
+        }
+        .character-count {
+            font-size: 0.875rem;
+            color: #64748b;
+            text-align: right;
+            margin-top: 0.25rem;
+        }
+        #story-summary {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            display: none;
+        }
+        .theme-tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background-color: #e2e8f0;
+            border-radius: 1rem;
+            margin: 0.25rem;
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <h1>Organizational Story Collection</h1>
+    <p>Share your organization's journey through these three key stories. Each question is designed to help us understand different aspects of your organization's past, present, and future.</p>
+    
+    <div class="progress-bar">
+        <div class="progress" style="width: 0%"></div>
+    </div>
+
+    <form id="story-form">
+        <div class="question-section">
+            <h2>1. Organizational Journey and Transformation</h2>
+            <div class="guidance">
+                <strong>Consider:</strong>
+                <ul>
+                    <li>Key moments that defined your organization</li>
+                    <li>Critical decisions that shaped your path</li>
+                    <li>Internal or external catalysts for change</li>
+                    <li>Areas of focus for improvement</li>
+                </ul>
+            </div>
+            <textarea 
+                name="journey" 
+                placeholder="Reflecting on your organization's journey so far, what key moments or decisions have shaped who you are today, and what changes—whether internal or external—have pushed you to evolve? How did you know it was time to transform, and what areas of your work or processes are you focusing on improving?"
+                required
+            ></textarea>
+            <div class="character-count">0 characters</div>
+        </div>
+
+        <div class="question-section">
+            <h2>2. Challenges and Stakeholder Evolution</h2>
+            <div class="guidance">
+                <strong>Consider:</strong>
+                <ul>
+                    <li>Recent significant challenges</li>
+                    <li>Unexpected opportunities that emerged</li>
+                    <li>Changes in stakeholder relationships</li>
+                    <li>New approaches to engagement</li>
+                </ul>
+            </div>
+            <textarea 
+                name="challenges" 
+                placeholder="Tell us about a recent challenge that highlighted both the obstacles your organization faces and the opportunities it opened up. How did it affect your relationship with your key stakeholders, and what changes do you envision in how you engage and serve them moving forward?"
+                required
+            ></textarea>
+            <div class="character-count">0 characters</div>
+        </div>
+
+        <div class="question-section">
+            <h2>3. Future Impact and Success</h2>
+            <div class="guidance">
+                <strong>Consider:</strong>
+                <ul>
+                    <li>Vision for expanded impact</li>
+                    <li>New capabilities and partnerships</li>
+                    <li>Desired outcomes</li>
+                    <li>Success metrics and indicators</li>
+                </ul>
+            </div>
+            <textarea 
+                name="future" 
+                placeholder="Imagine your organization three to five years from now—after successfully transforming. How has your impact expanded or deepened, and what new capabilities, partnerships, or outcomes are you most proud of? How will you measure success as you grow?"
+                required
+            ></textarea>
+            <div class="character-count">0 characters</div>
+        </div>
+
+        <button type="submit">Generate Story Summary</button>
+    </form>
+
+    <div id="story-summary"></div>
+
+    <script>
+        // Update progress bar as stories are entered
+        const textareas = document.querySelectorAll('textarea');
+        const characterCounts = document.querySelectorAll('.character-count');
+        
+        textareas.forEach((textarea, index) => {
+            textarea.addEventListener('input', () => {
+                updateProgress();
+                updateCharacterCount(textarea, characterCounts[index]);
+            });
+        });
+
+        function updateCharacterCount(textarea, countDisplay) {
+            const count = textarea.value.length;
+            countDisplay.textContent = `${count} characters`;
+        }
+
+        function updateProgress() {
+            const totalFields = textareas.length;
+            const filledFields = Array.from(textareas).filter(ta => ta.value.length > 50).length;
+            const progress = (filledFields / totalFields) * 100;
+            document.querySelector('.progress').style.width = `${progress}%`;
+        }
+
+        document.getElementById('story-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            
+            // Identify key themes from the stories
+            const themes = new Set();
+            
+            // Simple theme detection based on keywords
+            const themeKeywords = {
+                'transformation': ['transform', 'change', 'evolve', 'adapt'],
+                'stakeholder engagement': ['stakeholder', 'community', 'partner', 'relationship'],
+                'impact': ['impact', 'outcome', 'success', 'measure'],
+                'challenge': ['challenge', 'obstacle', 'problem', 'difficulty'],
+                'growth': ['grow', 'expand', 'scale', 'increase'],
+                'innovation': ['innovation', 'new', 'creative', 'solution']
+            };
+            
+            for (let [name, value] of formData.entries()) {
+                const lowercaseValue = value.toLowerCase();
+                for (let [theme, keywords] of Object.entries(themeKeywords)) {
+                    if (keywords.some(keyword => lowercaseValue.includes(keyword))) {
+                        themes.add(theme);
+                    }
+                }
+            }
+
+            // Display summary
+            const summaryDiv = document.getElementById('story-summary');
+            summaryDiv.innerHTML = `
+                <h2>Story Themes and Insights</h2>
+                <p>Based on your stories, we've identified these key themes:</p>
+                <div>
+                    ${Array.from(themes).map(theme => 
+                        `<span class="theme-tag">${theme}</span>`
+                    ).join('')}
+                </div>
+                <h3>Story Lengths:</h3>
+                <ul>
+                    <li>Journey and Transformation: ${formData.get('journey').length} characters</li>
+                    <li>Challenges and Stakeholder Evolution: ${formData.get('challenges').length} characters</li>
+                    <li>Future Impact and Success: ${formData.get('future').length} characters</li>
+                </ul>
+                <p>Your stories touch on elements from the ECO, SPOKE, and P5 frameworks, providing insights into your organization's past experiences, current challenges, and future aspirations.</p>
+            `;
+            summaryDiv.style.display = 'block';
+            summaryDiv.scrollIntoView({ behavior: 'smooth' });
+        });
+    </script>
+</body>
+</html>
