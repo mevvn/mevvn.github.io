@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strategic Planning Engagement Questionnaire</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        .required::after {
+            content: " *";
+            color: #e74c3c;
+        }
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-top: 4px;
+        }
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .address-group {
+            display: grid;
+            grid-gap: 15px;
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .address-group .full-width {
+            grid-column: 1 / -1;
+        }
+        .intro-text {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        button {
+            background: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button:hover {
+            background: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Strategic Planning Engagement Questionnaire</h1>
+        
+        <div class="intro-text">
+            Try to answer as many relevant questions on this questionnaire. With the answers to these questions, we should be able to get a good picture of the team members involved from the client organization as well as an introductory view of external stakeholders to be included.
+        </div>
+
+        <form id="strategicPlanningForm">
+            <h2>Client Organization Information</h2>
+            
+            <div class="form-group">
+                <label for="orgName" class="required">Client Organization Name</label>
+                <input type="text" id="orgName" name="orgName" required>
+            </div>
+
+            <div class="form-group">
+                <label for="orgType">Organization Type</label>
+                <input type="text" id="orgType" name="orgType">
+            </div>
+
+            <div class="form-group">
+                <label for="orgDescription">Briefly describe what the Client Organization does:</label>
+                <textarea id="orgDescription" name="orgDescription"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="vision">Client Organization Vision Statement:</label>
+                <textarea id="vision" name="vision"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="mission">Client Organization Mission Statement:</label>
+                <textarea id="mission" name="mission"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="values">Client Organization Values:</label>
+                <textarea id="values" name="values"></textarea>
+            </div>
+
+            <h2>Address Information</h2>
+            <div class="address-group">
+                <div class="form-group full-width">
+                    <label for="street1" class="required">Street Address</label>
+                    <input type="text" id="street1" name="street1" required>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="street2">Street Address Line 2</label>
+                    <input type="text" id="street2" name="street2">
+                </div>
+
+                <div class="form-group">
+                    <label for="city" class="required">City</label>
+                    <input type="text" id="city" name="city" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="state" class="required">State / Province</label>
+                    <input type="text" id="state" name="state" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="postal" class="required">Postal / Zip Code</label>
+                    <input type="text" id="postal" name="postal" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="country" class="required">Country</label>
+                    <input type="text" id="country" name="country" required>
+                </div>
+            </div>
+
+            <h2>Main Point of Contact</h2>
+            <div class="form-group">
+                <label for="contactFirst" class="required">First Name</label>
+                <input type="text" id="contactFirst" name="contactFirst" required>
+            </div>
+
+            <div class="form-group">
+                <label for="contactLast" class="required">Last Name</label>
+                <input type="text" id="contactLast" name="contactLast" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email" class="required">E-mail</label>
+                <input type="email" id="email" name="email" required placeholder="example@example.com">
+            </div>
+
+            <h2>Leadership Team</h2>
+            <div class="form-group">
+                <label for="leadershipTeam">Names and Titles of who makes up the leadership team:</label>
+                <textarea id="leadershipTeam" name="leadershipTeam" placeholder="List all leadership team members and their titles"></textarea>
+            </div>
+
+            <h2>Core Strategic Planning Team</h2>
+            <div class="form-group">
+                <label for="planningTeam">Names and Titles of the Client's strategic planning team:</label>
+                <textarea id="planningTeam" name="planningTeam" placeholder="List all strategic planning team members"></textarea>
+            </div>
+
+            <h2>Organizational Roster</h2>
+            <div class="form-group">
+                <label for="fullRoster">Full staff roster for the Client Organization:</label>
+                <textarea id="fullRoster" name="fullRoster" placeholder="List all staff members"></textarea>
+            </div>
+
+            <h2>Initial Stakeholder List</h2>
+            <div class="form-group">
+                <label for="stakeholders">List of External Stakeholders to be engaged during this engagement:</label>
+                <textarea id="stakeholders" name="stakeholders" placeholder="List external stakeholders - this list can be updated throughout the engagement as appropriate"></textarea>
+            </div>
+
+            <button type="submit">Submit Form</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('strategicPlanningForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Form submitted! In a real implementation, this would save or send the data.');
+        });
+    </script>
+</body>
+</html>
