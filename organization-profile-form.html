@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organizational Profile Questionnaire</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+        input[type="text"],
+        input[type="email"],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            margin-top: 4px;
+        }
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .subsection {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        .guidelines {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        button {
+            background: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        button:hover {
+            background: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Organizational Profile Questionnaire</h1>
+        
+        <form id="orgProfileForm">
+            <h2>1. Foundation and Purpose</h2>
+            
+            <div class="form-group">
+                <label for="mission">1.1. What is your organization's mission statement? What fundamental purpose does your organization serve?</label>
+                <textarea id="mission" name="mission" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="vision">1.2. Describe your organization's vision for the future. What ultimate impact do you aim to achieve?</label>
+                <textarea id="vision" name="vision" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="values">1.3. List and briefly explain your organization's core values:</label>
+                <textarea id="values" name="values" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="theory">1.4. Explain your organization's theory of change. How do your activities lead to your desired outcomes?</label>
+                <textarea id="theory" name="theory" required></textarea>
+            </div>
+
+            <h2>2. Structure and Organization</h2>
+
+            <div class="form-group">
+                <label for="legal">2.1. What is your organization's legal structure?</label>
+                <input type="text" id="legal" name="legal" required>
+            </div>
+
+            <div class="form-group">
+                <label>2.2. Provide an overview of your leadership structure:</label>
+                <div class="subsection">
+                    <label for="executive">Executive team composition:</label>
+                    <textarea id="executive" name="executive" required></textarea>
+
+                    <label for="board">Board of Directors:</label>
+                    <textarea id="board" name="board" required></textarea>
+
+                    <label for="advisory">Key advisory roles:</label>
+                    <textarea id="advisory" name="advisory" required></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="orgStructure">2.3. Describe your organizational structure (departments, reporting relationships, geographic distribution):</label>
+                <textarea id="orgStructure" name="orgStructure" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="partnerships">2.4. List your key strategic partnerships and affiliations:</label>
+                <textarea id="partnerships" name="partnerships" required></textarea>
+            </div>
+
+            <h2>3. Operating Context</h2>
+
+            <div class="form-group">
+                <label for="regions">3.1. In which geographic regions does your organization operate?</label>
+                <textarea id="regions" name="regions" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="challenges">3.2. What are the primary global challenges your organization addresses?</label>
+                <textarea id="challenges" name="challenges" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="factors">3.3. What significant external factors impact your work? (political, economic, social/cultural, regulatory)</label>
+                <textarea id="factors" name="factors" required></textarea>
+            </div>
+
+            <h2>4. Key Stakeholders</h2>
+
+            <div class="form-group">
+                <label for="beneficiaries">4.1. Who are your primary beneficiaries? Describe their characteristics and needs:</label>
+                <textarea id="beneficiaries" name="beneficiaries" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="funding">4.2. List your major funding sources:</label>
+                <textarea id="funding" name="funding" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="workforce">4.3. Describe your workforce (staff composition, volunteer programs, DEI initiatives):</label>
+                <textarea id="workforce" name="workforce" required></textarea>
+            </div>
+
+            <h2>5. Programs and Impact</h2>
+
+            <div class="form-group">
+                <label for="programs">5.1. Describe your core programs and services:</label>
+                <textarea id="programs" name="programs" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="metrics">5.2. What are your key impact metrics? How do you measure success?</label>
+                <textarea id="metrics" name="metrics" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="examples">5.3. Share 2-3 specific examples that best demonstrate your organization's impact:</label>
+                <textarea id="examples" name="examples" required></textarea>
+            </div>
+
+            <h2>6. Financial Overview</h2>
+
+            <div class="form-group">
+                <label for="budget">6.1. What is your annual operating budget?</label>
+                <input type="text" id="budget" name="budget" required>
+            </div>
+
+            <div class="form-group">
+                <label for="revenue">6.2. Describe your revenue sources by percentage:</label>
+                <textarea id="revenue" name="revenue" required></textarea>
+            </div>
+
+            <h2>7. Contact Information</h2>
+
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="role">Role:</label>
+                <input type="text" id="role" name="role" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+                <label for="date">Date:</label>
+                <input type="date" id="date" name="date" required>
+            </div>
+
+            <div class="guidelines">
+                <h3>Response Guidelines:</h3>
+                <ul>
+                    <li>Please provide specific examples where possible</li>
+                    <li>Include quantitative data when available</li>
+                    <li>Feel free to attach supporting documents</li>
+                    <li>Mark any confidential information appropriately</li>
+                </ul>
+            </div>
+
+            <button type="submit">Submit Form</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('orgProfileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Form submitted! In a real implementation, this would save or send the data.');
+        });
+    </script>
+</body>
+</html>
