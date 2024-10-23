@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            line-height: 1.5;
+        }
+        .question-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            background-color: #f8fafc;
+        }
+        .section-intro {
+            font-size: 1.1rem;
+            color: #475569;
+            margin-bottom: 1.5rem;
+            padding: 0.75rem;
+            background-color: #f1f5f9;
+            border-radius: 0.25rem;
+        }
+        .question {
+            margin-bottom: 1.5rem;
+        }
+        textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 0.75rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.25rem;
+            margin-top: 0.5rem;
+            font-family: inherit;
+            line-height: 1.5;
+            resize: vertical;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        button {
+            background-color: #2563eb;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 1rem;
+        }
+        button:hover {
+            background-color: #1d4ed8;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 0.5rem;
+            background-color: #e2e8f0;
+            border-radius: 0.25rem;
+            margin: 1rem 0;
+        }
+        .progress {
+            height: 100%;
+            background-color: #2563eb;
+            border-radius: 0.25rem;
+            transition: width 0.3s ease;
+        }
+        .character-count {
+            font-size: 0.875rem;
+            color: #64748b;
+            text-align: right;
+            margin-top: 0.25rem;
+        }
+        #eco-summary {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            display: none;
+        }
+        .response-preview {
+            background-color: white;
+            padding: 0.75rem;
+            border-radius: 0.25rem;
+            margin-top: 0.5rem;
+            border: 1px solid #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+    <h1>ECO Framework Assessment</h1>
+    <p>This assessment helps you understand the external factors affecting your organization's transformation journey.</p>
+    
+    <div class="progress-bar">
+        <div class="progress" style="width: 0%"></div>
+    </div>
+
+    <form id="eco-form">
+        <div class="question-section">
+            <h2>Environment</h2>
+            <div class="section-intro">
+                Explore the broader societal, technological, and policy shifts affecting your organization.
+            </div>
+            
+            <div class="question">
+                <p><strong>Societal Shifts:</strong></p>
+                <textarea 
+                    name="env_shifts" 
+                    placeholder="What major shifts in society or your field are driving the need for your organization to evolve?"
+                    required
+                ></textarea>
+                <div class="character-count">0 characters</div>
+            </div>
+
+            <div class="question">
+                <p><strong>Beneficiary Evolution:</strong></p>
+                <textarea 
+                    name="env_needs" 
+                    placeholder="How are the needs of your beneficiaries or community evolving, and what does that mean for your work?"
+                    required
+                ></textarea>
+                <div class="character-count">0 characters</div>
+            </div>
+
+            <div class="question">
+                <p><strong>Technology & Policy Trends:</strong></p>
+                <textarea 
+                    name="env_trends" 
+                    placeholder="Are there any emerging trends in technology or policy that could reshape how you achieve your mission?"
+                    required
+                ></textarea>
+                <div class="character-count">0 characters</div>
+            </div>
+        </div>
+
+        <div class="question-section">
+            <h2>Coopetition</h2>
+            <div class="section-intro">
+                Examine your relationships with other organizations and potential partnerships.
+            </div>
+            
+            <div class="question">
+                <p><strong>Organizational Landscape:</strong></p>
+                <textarea 
+                    name="coop_landscape" 
+                    placeholder="How is the landscape of organizations working on your issue changing, and where do you fit in that new picture?"
+                    required
+                ></textarea>
+                <div class="character-count">0 characters</div>
+            </div>
+
+            <div class="question">
+                <p><strong>Partnership Opportunities:</strong></p>
+                <textarea 
+                    name="coop_partnerships" 
+                    placeholder="Are there any potential partners who could help you navigate this transformation more effectively?"
+                    required
+                ></textarea>
+                <div class="character-count">0 characters</div>
+            </div>
+
+            <div class="question">
+                <p><strong>Relationship Evolution:</strong></p>
+                <textarea 
+                    name="coop_relationships" 
+                    placeholder="How might your relationships with other organizations need to shift as you transform?"
+                    required
+                ></textarea>
+                <div class="character-count">0 characters</div>
+            </div>
+        </div>
+
+        <div class="question-section">
+            <h2>Organizations</h2>
+            <div class="section-intro">
+                Consider your role in the broader ecosystem and institutional relationships.
+            </div>
+            
+            <div class="question">
+                <p><strong>Ecosystem Role:</strong></p>
+                <textarea 
+                    name="org_role" 
+                    placeholder="As you transform, how might your role in the broader ecosystem of social change evolve?"
+                    required
+                ></textarea>
+                <div class="character-count">0 characters</div>
+            </div>
+
+            <div class="question">
+                <p><strong>Institutional Support:</strong></p>
+                <textarea 
+                    name="org_support" 
+                    placeholder="What organizations or institutions will be crucial to support or validate your transformation?"
+                    required
+                ></textarea>
+                <div class="character-count">0 characters</div>
+            </div>
+
+            <div class="question">
+                <p><strong>Mission Impact:</strong></p>
+                <textarea 
+                    name="org_impact" 
+                    placeholder="How will your transformation affect your ability to serve your community or achieve your mission?"
+                    required
+                ></textarea>
+                <div class="character-count">0 characters</div>
+            </div>
+        </div>
+
+        <button type="submit">Generate ECO Analysis</button>
+    </form>
+
+    <div id="eco-summary"></div>
+
+    <script>
+        // Update progress bar as questions are answered
+        const textareas = document.querySelectorAll('textarea');
+        const characterCounts = document.querySelectorAll('.character-count');
+        
+        textareas.forEach((textarea, index) => {
+            textarea.addEventListener('input', () => {
+                updateProgress();
+                updateCharacterCount(textarea, characterCounts[index]);
+            });
+        });
+
+        function updateCharacterCount(textarea, countDisplay) {
+            const count = textarea.value.length;
+            countDisplay.textContent = `${count} characters`;
+        }
+
+        function updateProgress() {
+            const totalFields = textareas.length;
+            const filledFields = Array.from(textareas).filter(ta => ta.value.length > 50).length;
+            const progress = (filledFields / totalFields) * 100;
+            document.querySelector('.progress').style.width = `${progress}%`;
+        }
+
+        document.getElementById('eco-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            
+            // Create summary analysis
+            const summaryDiv = document.getElementById('eco-summary');
+            summaryDiv.innerHTML = `
+                <h2>ECO Analysis Summary</h2>
+                
+                <h3>Environment Analysis</h3>
+                <p>Key external factors identified:</p>
+                <ul>
+                    <li>Societal Shifts: ${summarizeResponse(formData.get('env_shifts'))}</li>
+                    <li>Beneficiary Evolution: ${summarizeResponse(formData.get('env_needs'))}</li>
+                    <li>Technology & Policy: ${summarizeResponse(formData.get('env_trends'))}</li>
+                </ul>
+
+                <h3>Coopetition Analysis</h3>
+                <p>Partnership and relationship insights:</p>
+                <ul>
+                    <li>Landscape Position: ${summarizeResponse(formData.get('coop_landscape'))}</li>
+                    <li>Partnership Opportunities: ${summarizeResponse(formData.get('coop_partnerships'))}</li>
+                    <li>Relationship Changes: ${summarizeResponse(formData.get('coop_relationships'))}</li>
+                </ul>
+
+                <h3>Organizational Analysis</h3>
+                <p>Ecosystem and institutional considerations:</p>
+                <ul>
+                    <li>Ecosystem Role: ${summarizeResponse(formData.get('org_role'))}</li>
+                    <li>Support Network: ${summarizeResponse(formData.get('org_support'))}</li>
+                    <li>Mission Impact: ${summarizeResponse(formData.get('org_impact'))}</li>
+                </ul>
+
+                <h3>Next Steps</h3>
+                <p>Based on your responses, consider focusing on:</p>
+                <ul>
+                    <li>Addressing identified environmental changes</li>
+                    <li>Developing new partnership strategies</li>
+                    <li>Strengthening institutional relationships</li>
+                </ul>
+            `;
+            summaryDiv.style.display = 'block';
+            summaryDiv.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        function summarizeResponse(text) {
+            if (text.length > 100) {
+                return text.substring(0, 100) + '...';
+            }
+            return text;
+        }
+    </script>
+</body>
+</html>

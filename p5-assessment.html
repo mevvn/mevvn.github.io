@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            line-height: 1.5;
+        }
+        .question-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            background-color: #f8fafc;
+        }
+        .section-intro {
+            font-size: 1.1rem;
+            color: #475569;
+            margin-bottom: 1.5rem;
+            padding: 0.75rem;
+            background-color: #f1f5f9;
+            border-radius: 0.25rem;
+        }
+        .question {
+            margin-bottom: 1.5rem;
+        }
+        textarea {
+            width: 100%;
+            min-height: 100px;
+            padding: 0.75rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.25rem;
+            margin-top: 0.5rem;
+            font-family: inherit;
+            line-height: 1.5;
+            resize: vertical;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        button {
+            background-color: #2563eb;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 1rem;
+        }
+        button:hover {
+            background-color: #1d4ed8;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 0.5rem;
+            background-color: #e2e8f0;
+            border-radius: 0.25rem;
+            margin: 1rem 0;
+        }
+        .progress {
+            height: 100%;
+            background-color: #2563eb;
+            border-radius: 0.25rem;
+            transition: width 0.3s ease;
+        }
+        .character-count {
+            font-size: 0.875rem;
+            color: #64748b;
+            text-align: right;
+            margin-top: 0.25rem;
+        }
+        #p5-summary {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            display: none;
+        }
+        .key-insight {
+            background-color: #dbeafe;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            margin: 0.5rem 0;
+        }
+        .matrix-cell {
+            padding: 0.5rem;
+            border: 1px solid #e2e8f0;
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>P5 Framework Assessment</h1>
+    <p>This assessment helps you evaluate and improve your organizational operations through the lens of Power, Process, People, Platforms, and Progress.</p>
+    
+    <div class="progress-bar">
+        <div class="progress" style="width: 0%"></div>
+    </div>
+
+    <form id="p5-form">
+        <div class="question-section">
+            <h2>Power</h2>
+            <div class="section-intro">
+                Evaluate your resource utilization and sustainability.
+            </div>
+            
+            <div class="question">
+                <p><strong>Resource Sources:</strong></p>
+                <textarea 
+                    name="power_sources" 
+                    placeholder="What are your current primary sources of funding and resources?"
+                    required
+                ></textarea>
+                <div class="character-count">0 characters</div>
+            </div>
+
+            <div class="question">
+                <p><strong>Resource Efficiency:</strong></p>
+                <textarea 
+                    name="power_efficiency" 
+                    placeholder="How sustainable and efficient is your current use of these resources?"
+                    required
+                ></textarea>
+                <div class="character-count">0 characters</div>
+            </div>
+
+            <div class="question">
+                <p><strong>Future Resources:</strong></p>
+                <textarea 
+                    name="power_future" 
+                    placeholder="What significant changes in your resource needs or availability do you anticipate as you level-up?"
+                    required
+                ></textarea>
+                <div class="character-count">0 characters</div>
+            </div>
+        </div>
+
+        <div class="question-section">
+            <h2>Process</h2>
+            <div class="section-intro">
+                Assess your operational workflows and improvement methods.
+            </div>
+            
+            <div class="question">
+                <p><strong>Core Processes:</strong></p>
+                <textarea 
+                    name="process_core" 
+                    placeholder="What are your core operational processes, and how well do they align with your current mission?"
+                    required
+                ></textarea>
+                <div class="character-count">0 characters</div>
+            </div>
+
+            <div class="question">
+                <p><strong>Process Improvement:</strong></p>
+                <textarea 
+                    name="process_improvement" 
+                    placeholder="What methods do you use to improve and adapt your processes?"
+                    required
+                ></textarea>
+                <div class="character-count">0 characters</div>
+            </div>
+
+            <div class="question">
+                <p><strong>Process Evolution:</strong></p>
+                <textarea 
+                    name="process_evolution" 
+                    placeholder="Which of your current processes might need significant redesign to support your transformation?"
+                    required
+                ></textarea>
+                <div class="character-count">0 characters</div>
+            </div>
+        </div>
+
+        <div class="question-section">
+            <h2>People</h2>
+            <div class="section-intro">
+                Evaluate your team structure and capabilities.
+            </div>
+            
+            <div class="question">
+                <p><strong>Team Structure:</strong></p>
+                <textarea 
+                    name="people_structure" 
+                    placeholder="How would you describe your current organizational structure and culture?"
+                    required
+                ></textarea>
+                <div class="character-count">0 characters</div>
+            </div>
+
+            <div class="question">
+                <p><strong>Team Capabilities:</strong></p>
+                <textarea 
+                    name="people_capabilities" 
+                    placeholder="What are the key strengths and challenges of your current team?"
+                    required
+                ></textarea>
+                <div class="character-count">0 characters</div>
+            </div>
+
+            <div class="question">
+                <p><strong>Future Needs:</strong></p>
+                <textarea 
+                    name="people_needs" 
+                    placeholder="What skills or capabilities does your organization currently lack that might be crucial for your transformation?"
+                    required
+                ></textarea>
+                <div class="character-count">0 characters</div>
+            </div>
+        </div>
+
+        <div class="question-section">
+            <h2>Platforms</h2>
+            <div class="section-intro">
+                Assess your technological infrastructure and tools.
+            </div>
+            
+            <div class="question">
+                <p><strong>Current Systems:</strong></p>
+                <textarea 
+                    name="platforms_current" 
+                    placeholder="What key technological systems and tools do you currently use to support your operations?"
+                    required
+                ></textarea>
+                <div class="character-count">0 characters</div>
+            </div>
+
+            <div class="question">
+                <p><strong>System Effectiveness:</strong></p>
+                <textarea 
+                    name="platforms_effectiveness" 
+                    placeholder="How well do these current platforms support transparency, efficiency, and stakeholder engagement?"
+                    required
+                ></textarea>
+                <div class="character-count">0 characters</div>
+            </div>
+
+            <div class="question">
+                <p><strong>Future Technology:</strong></p>
+                <textarea 
+                    name="platforms_future" 
+                    placeholder="What new technological needs might arise as you transform your organization?"
+                    required
+                ></textarea>
+                <div class="character-count">0 characters</div>
+            </div>
+        </div>
+
+        <div class="question-section">
+            <h2>Progress</h2>
+            <div class="section-intro">
+                Evaluate your measurement and tracking methods.
+            </div>
+            
+            <div class="question">
+                <p><strong>Current Metrics:</strong></p>
+                <textarea 
+                    name="progress_metrics" 
+                    placeholder="How do you currently measure and track progress towards your strategic goals?"
+                    required
+                ></textarea>
+                <div class="character-count">0 characters</div>
+            </div>
+
+            <div class="question">
+                <p><strong>Measurement Gaps:</strong></p>
+                <textarea 
+                    name="progress_gaps" 
+                    placeholder="Are there aspects of your impact that you're currently not measuring but should be?"
+                    required
+                ></textarea>
+                <div class="character-count">0 characters</div>
+            </div>
+
+            <div class="question">
+                <p><strong>Future Measurement:</strong></p>
+                <textarea 
+                    name="progress_future" 
+                    placeholder="How might your methods for tracking and reporting progress need to change to support your evolution?"
+                    required
+                ></textarea>
+                <div class="character-count">0 characters</div>
+            </div>
+        </div>
+
+        <button type="submit">Generate P5 Analysis</button>
+    </form>
+
+    <div id="p5-summary"></div>
+
+    <script>
+        // Update progress bar as questions are answered
+        const textareas = document.querySelectorAll('textarea');
+        const characterCounts = document.querySelectorAll('.character-count');
+        
+        textareas.forEach((textarea, index) => {
+            textarea.addEventListener('input', () => {
+                updateProgress();
+                updateCharacterCount(textarea, characterCounts[index]);
+            });
+        });
+
+        function updateCharacterCount(textarea, countDisplay) {
+            const count = textarea.value.length;
+            countDisplay.textContent = `${count} characters`;
+        }
+
+        function updateProgress() {
+            const totalFields = textareas.length;
+            const filledFields = Array.from(textareas).filter(ta => ta.value.length > 50).length;
+            const progress = (filledFields / totalFields) * 100;
+            document.querySelector('.progress').style.width = `${progress}%`;
+        }
+
+        document.getElementById('p5-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            
+            // Create summary analysis
+            const summaryDiv = document.getElementById('p5-summary');
+            summaryDiv.innerHTML = `
+                <h2>P5 Analysis Summary</h2>
+                
+                <h3>Power Assessment</h3>
+                <div class="key-insight">Current Resources: ${summarizeResponse(formData.get('power_sources'))}</div>
+                <div class="key-insight">Resource Efficiency: ${summarizeResponse(formData.get('power_efficiency'))}</div>
+                <div class="key-insight">Future Needs: ${summarizeResponse(formData.get('power_future'))}</div>
+
+                <h3>Process Evaluation</h3>
+                <div class="key-insight">Core Operations: ${summarizeResponse(formData.get('process_core'))}</div>
+                <div class="key-insight">Improvement Methods: ${summarizeResponse(formData.get('process_improvement'))}</div>
+                <div class="key-insight">Transformation Needs: ${summarizeResponse(formData.get('process_evolution'))}</div>
+
+                <h3>People Analysis</h3>
+                <div class="key-insight">Team Structure: ${summarizeResponse(formData.get('people_structure'))}</div>
+                <div class="key-insight">Current Capabilities: ${summarizeResponse(formData.get('people_capabilities'))}</div>
+                <div class="key-insight">Capability Gaps: ${summarizeResponse(formData.get('people_needs'))}</div>
+
+                <h3>Platforms Review</h3>
+                <div class="key-insight">Current Systems: ${summarizeResponse(formData.get('platforms_current'))}</div>
+                <div class="key-insight">System Effectiveness: ${summarizeResponse(formData.get('platforms_effectiveness'))}</div>
+                <div class="key-insight">Future Technology: ${summarizeResponse(formData.get('platforms_future'))}</div>
+
+                <h3>Progress Measurement</h3>
+                <div class="key-insight">Current Metrics: ${summarizeResponse(formData.get('progress_metrics'))}</div>
+                <div class="key-insight">Measurement Gaps: ${summarizeResponse(formData.get('progress_gaps'))}</div>
+                <div class="key-insight">Future Tracking: ${summarizeResponse(formData.get('progress_future'))}</div>
+
+                <h3>Priority Focus Areas</h3>
+                <ul>
+                    <li>Resource Optimization & Sustainability</li>
+                    <li>Process Improvement & Alignment</li>
+                    <li>Team Development & Capability Building</li>
+                    <li>Technology Infrastructure Enhancement</li>
+                    <li>Measurement System Evolution</li>
+                </ul>
+            `;
+            summaryDiv.style.display = 'block';
+            summaryDiv.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        function summarizeResponse(text) {
+            if (text.length > 100) {
+                return text.substring(0, 100) + '...';
+            }
+            return text;
+        }
+    </script>
+</body>
+</html>
