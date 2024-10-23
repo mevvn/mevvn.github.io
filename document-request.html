@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            line-height: 1.5;
+        }
+        .document-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.5rem;
+            background-color: #f8fafc;
+        }
+        .section-intro {
+            font-size: 1.1rem;
+            color: #475569;
+            margin-bottom: 1.5rem;
+            padding: 0.75rem;
+            background-color: #f1f5f9;
+            border-radius: 0.25rem;
+        }
+        .document-item {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 0.25rem;
+            background-color: white;
+        }
+        .file-upload {
+            margin-top: 0.5rem;
+        }
+        .file-status {
+            font-size: 0.875rem;
+            color: #64748b;
+            margin-top: 0.25rem;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 0.5rem;
+            background-color: #e2e8f0;
+            border-radius: 0.25rem;
+            margin: 1rem 0;
+        }
+        .progress {
+            height: 100%;
+            background-color: #2563eb;
+            border-radius: 0.25rem;
+            transition: width 0.3s ease;
+        }
+        button {
+            background-color: #2563eb;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 1rem;
+        }
+        button:hover {
+            background-color: #1d4ed8;
+        }
+        .document-status {
+            display: flex;
+            align-items: center;
+            margin-top: 0.5rem;
+        }
+        .status-indicator {
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+        .status-pending {
+            background-color: #cbd5e1;
+        }
+        .status-uploaded {
+            background-color: #22c55e;
+        }
+        .document-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+        .summary-section {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            background-color: #f8fafc;
+            border: 1px solid #e2e8f0;
+            display: none;
+        }
+        .required-indicator {
+            color: #ef4444;
+            margin-left: 0.25rem;
+        }
+        .document-note {
+            font-size: 0.875rem;
+            color: #64748b;
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <h1>Strategic Planning Documents Request</h1>
+    <p>Please upload the following documents to support the strategic planning process. All documents will be handled confidentially.</p>
+    
+    <div class="progress-bar">
+        <div class="progress" style="width: 0%"></div>
+    </div>
+
+    <form id="documents-form">
+        <div class="document-section">
+            <h2>Finance and Budget</h2>
+            <div class="section-intro">
+                Financial documents that provide insight into the organization's fiscal health and management.
+            </div>
+            
+            <div class="document-item">
+                <label>
+                    <strong>Current Operating Budget</strong>
+                    <span class="required-indicator">*</span>
+                </label>
+                <div class="file-upload">
+                    <input type="file" name="operating_budget" required accept=".pdf,.doc,.docx,.xls,.xlsx">
+                </div>
+                <div class="document-status">
+                    <div class="status-indicator status-pending"></div>
+                    <span>Pending Upload</span>
+                </div>
+            </div>
+
+            <div class="document-item">
+                <label>
+                    <strong>Projected Budget (Next Fiscal Year)</strong>
+                </label>
+                <div class="document-note">If available</div>
+                <div class="file-upload">
+                    <input type="file" name="projected_budget" accept=".pdf,.doc,.docx,.xls,.xlsx">
+                </div>
+                <div class="document-status">
+                    <div class="status-indicator status-pending"></div>
+                    <span>Pending Upload</span>
+                </div>
+            </div>
+
+            <div class="document-item">
+                <label>
+                    <strong>Cash Flow Projections</strong>
+                    <span class="required-indicator">*</span>
+                </label>
+                <div class="file-upload">
+                    <input type="file" name="cash_flow" required accept=".pdf,.doc,.docx,.xls,.xlsx">
+                </div>
+                <div class="document-status">
+                    <div class="status-indicator status-pending"></div>
+                    <span>Pending Upload</span>
+                </div>
+            </div>
+
+            <div class="document-item">
+                <label>
+                    <strong>Financial Policies</strong>
+                    <span class="required-indicator">*</span>
+                </label>
+                <div class="document-note">Including spending, credit cards, expenses, reimbursements, and reporting policies</div>
+                <div class="file-upload">
+                    <input type="file" name="financial_policies" required accept=".pdf,.doc,.docx">
+                </div>
+                <div class="document-status">
+                    <div class="status-indicator status-pending"></div>
+                    <span>Pending Upload</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="document-section">
+            <h2>Fundraising</h2>
+            <div class="section-intro">
+                Development and fundraising documentation and metrics.
+            </div>
+
+            <div class="document-item">
+                <label>
+                    <strong>Current Development Plans</strong>
+                    <span class="required-indicator">*</span>
+                </label>
+                <div class="file-upload">
+                    <input type="file" name="development_plans" required accept=".pdf,.doc,.docx">
+                </div>
+                <div class="document-status">
+                    <div class="status-indicator status-pending"></div>
+                    <span>Pending Upload</span>
+                </div>
+            </div>
+
+            <div class="document-item">
+                <label>
+                    <strong>Sample Proposals (3-5)</strong>
+                    <span class="required-indicator">*</span>
+                </label>
+                <div class="document-note">Include variety: general operating, programmatic, government funding, corporate sponsorships</div>
+                <div class="file-upload">
+                    <input type="file" name="sample_proposals" required multiple accept=".pdf,.doc,.docx">
+                </div>
+                <div class="document-status">
+                    <div class="status-indicator status-pending"></div>
+                    <span>Pending Upload</span>
+                </div>
+            </div>
+
+            <div class="document-item">
+                <label>
+                    <strong>Donor Pipeline</strong>
+                    <span class="required-indicator">*</span>
+                </label>
+                <div class="document-note">Current and prospective donors, qualified and weighted</div>
+                <div class="file-upload">
+                    <input type="file" name="donor_pipeline" required accept=".pdf,.doc,.docx,.xls,.xlsx">
+                </div>
+                <div class="document-status">
+                    <div class="status-indicator status-pending"></div>
+                    <span>Pending Upload</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="document-section">
+            <h2>HR/Operations</h2>
+            <div class="section-intro">
+                Organizational structure, policies, and operational documentation.
+            </div>
+
+            <div class="document-item">
+                <label>
+                    <strong>Strategic Plan & KPIs</strong>
+                    <span class="required-indicator">*</span>
+                </label>
+                <div class="file-upload">
+                    <input type="file" name="strategic_plan" required accept=".pdf,.doc,.docx">
+                </div>
+                <div class="document-status">
+                    <div class="status-indicator status-pending"></div>
+                    <span>Pending Upload</span>
+                </div>
+            </div>
+
+            <div class="document-item">
+                <label>
+                    <strong>Employee Handbook</strong>
+                    <span class="required-indicator">*</span>
+                </label>
+                <div class="file-upload">
+                    <input type="file" name="employee_handbook" required accept=".pdf,.doc,.docx">
+                </div>
+                <div class="document-status">
+                    <div class="status-indicator status-pending"></div>
+                    <span>Pending Upload</span>
+                </div>
+            </div>
+
+            <div class="document-item">
+                <label>
+                    <strong>Organization Chart</strong>
+                    <span class="required-indicator">*</span>
+                </label>
+                <div class="document-note">Including titles and functional areas for both FTE & Contractors</div>
+                <div class="file-upload">
+                    <input type="file" name="org_chart" required accept=".pdf,.doc,.docx,.xls,.xlsx">
+                </div>
+                <div class="document-status">
+                    <div class="status-indicator status-pending"></div>
+                    <span>Pending Upload</span>
+                </div>
+            </div>
+
+            <div class="document-item">
+                <label>
+                    <strong>Technology Platform List</strong>
+                    <span class="required-indicator">*</span>
+                </label>
+                <div class="document-note">List of all platforms and applications with their purposes</div>
+                <div class="file-upload">
+                    <input type="file" name="tech_platforms" required accept=".pdf,.doc,.docx,.xls,.xlsx">
+                </div>
+                <div class="document-status">
+                    <div class="status-indicator status-pending"></div>
+                    <span>Pending Upload</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="document-section">
+            <h2>Programmatic Documents</h2>
+            <div class="section-intro">
+                Training and program implementation documentation.
+            </div>
+
+            <div class="document-item">
+                <label>
+                    <strong>Training Manuals/Curriculum</strong>
+                    <span class="required-indicator">*</span>
+                </label>
+                <div class="file-upload">
+                    <input type="file" name="training_manuals" required accept=".pdf,.doc,.docx">
+                </div>
+                <div class="document-status">
+                    <div class="status-indicator status-pending"></div>
+                    <span>Pending Upload</span>
+                </div>
+            </div>
+
+            <div class="document-item">
+                <label>
+                    <strong>Campaign Plans</strong>
+                </label>
+                <div class="document-note">If applicable, including performance metrics and results</div>
+                <div class="file-upload">
+                    <input type="file" name="campaign_plans" accept=".pdf,.doc,.docx">
+                </div>
+                <div class="document-status">
+                    <div class="status-indicator status-pending"></div>
+                    <span>Pending Upload</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="document-section">
+            <h2>Communication Documents</h2>
+            <div class="section-intro">
+                Stakeholder communication and media documentation.
+            </div>
+
+            <div class="document-item">
+                <label>
+                    <strong>Stakeholder Communication List</strong>
+                    <span class="required-indicator">*</span>
+                </label>
+                <div class="document-note">Including key stakeholders and communication frequency</div>
+                <div class="file-upload">
+                    <input type="file" name="stakeholder_list" required accept=".pdf,.doc,.docx,.xls,.xlsx">
+                </div>
+                <div class="document-status">
+                    <div class="status-indicator status-pending"></div>
+                    <span>Pending Upload</span>
+                </div>
+            </div>
+
+            <div class="document-item">
+                <label>
+                    <strong>Communication Samples</strong>
+                    <span class="required-indicator">*</span>
+                </label>
+                <div class="file-upload">
+                    <input type="file" name="communication_samples" required multiple accept=".pdf,.doc,.docx">
+                </div>
+                <div class="document-status">
+                    <div class="status-indicator status-pending"></div>
+                    <span>Pending Upload</span>
+                </div>
+            </div>
+
+            <div class="document-item">
+                <label>
+                    <strong>Media Outlet List</strong>
+                    <span class="required-indicator">*</span>
+                </label>
+                <div class="file-upload">
+                    <input type="file" name="media_list" required accept=".pdf,.doc,.docx,.xls,.xlsx">
+                </div>
+                <div class="document-status">
+                    <div class="status-indicator status-pending"></div>
+                    <span>Pending Upload</span>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit">Submit Documents</button>
+    </form>
+
+    <div class="summary-section" id="upload-summary"></div>
+
+    <script>
+        // Update progress as files are selected
+        const fileInputs = document.querySelectorAll('input[type="file"]');
+        const requiredInputs = document.querySelectorAll('input[type="file"][required]');
+        
+        fileInputs.forEach(input => {
+            input.addEventListener('change', (e) => {
+                updateFileStatus(e.target);
+                updateProgress();
+            });
+        });
+
+        function updateFileStatus(input) {
+            const statusDiv = input.closest('.document-item').querySelector('.document-status');
+            const indicator = statusDiv.querySelector('.status-indicator');
+            const statusText = statusDiv.querySelector('span');
+            
+            if (input.files.length > 0) {
+                indicator.classList.remove('status-pending');
+                indicator.classList.add('status-uploaded');
+                statusText.textContent = 'File(s) Selected';
+            } else {
+                indicator.classList.remove('status-uploaded');
+                indicator.classList.add('status-pending');
+                statusText.textContent = 'Pending Upload';
+            }
+        }
+
+        function updateProgress() {
+            const totalRequired = requiredInputs.length;
+            const uploadedRequired = Array.from
