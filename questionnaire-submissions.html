@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Questionnaire Submissions Overview</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 32px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .header-content h1 {
+            margin: 0;
+            color: #2c3e50;
+            font-size: 24px;
+        }
+
+        .header-content p {
+            margin: 8px 0 0 0;
+            color: #666;
+            font-size: 16px;
+        }
+
+        .submission-group {
+            margin-bottom: 32px;
+            background-color: #fff;
+            border: 1px solid #e1e4e8;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .group-header {
+            padding: 16px 20px;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #e1e4e8;
+            font-weight: 500;
+            color: #2c3e50;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .submission-count {
+            font-size: 14px;
+            color: #666;
+            background-color: #e9ecef;
+            padding: 4px 8px;
+            border-radius: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px 20px;
+            text-align: left;
+            border-bottom: 1px solid #e1e4e8;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .button {
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .button-primary {
+            background-color: #1976d2;
+            color: white;
+        }
+
+        .button-secondary {
+            background-color: #f8f9fa;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .button-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .button:hover {
+            opacity: 0.9;
+        }
+
+        .status-badge {
+            font-size: 14px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        .status-complete {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status-draft {
+            background-color: #fff3e0;
+            color: #ef6c00;
+        }
+
+        .submission-date {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .new-submission {
+            padding: 8px 16px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-content">
+                <h1>Sample Questionnaire - All Submissions</h1>
+                <p>View and manage all questionnaire responses</p>
+            </div>
+            <button class="button button-primary new-submission">
+                <i class="fas fa-plus"></i> New Submission
+            </button>
+        </div>
+
+        <!-- Sally's Submissions Group -->
+        <div class="submission-group">
+            <div class="group-header">
+                <span>Sally Johnson</span>
+                <span class="submission-count">3 submissions</span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Submission Date</th>
+                        <th>Status</th>
+                        <th>Last Modified</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div>November 17, 2024</div>
+                            <div class="submission-date">10:30 AM</div>
+                        </td>
+                        <td><span class="status-badge status-complete">Complete</span></td>
+                        <td>
+                            <div>November 17, 2024</div>
+                            <div class="submission-date">2:45 PM</div>
+                        </td>
+                        <td>
+                            <div class="actions">
+                                <button class="button button-secondary">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                                <button class="button button-secondary">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button class="button button-danger">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div>October 15, 2024</div>
+                            <div class="submission-date">2:15 PM</div>
+                        </td>
+                        <td><span class="status-badge status-complete">Complete</span></td>
+                        <td>
+                            <div>October 15, 2024</div>
+                            <div class="submission-date">4:30 PM</div>
+                        </td>
+                        <td>
+                            <div class="actions">
+                                <button class="button button-secondary">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                                <button class="button button-secondary">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button class="button button-danger">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Bob's Submissions Group -->
+        <div class="submission-group">
+            <div class="group-header">
+                <span>Bob Smith</span>
+                <span class="submission-count">1 submission</span>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Submission Date</th>
+                        <th>Status</th>
+                        <th>Last Modified</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div>November 16, 2024</div>
+                            <div class="submission-date">11:20 AM</div>
+                        </td>
+                        <td><span class="status-badge status-draft">Draft</span></td>
+                        <td>
+                            <div>November 16, 2024</div>
+                            <div class="submission-date">11:45 AM</div>
+                        </td>
+                        <td>
+                            <div class="actions">
+                                <button class="button button-secondary">
+                                    <i class="fas fa-eye"></i> View
+                                </button>
+                                <button class="button button-secondary">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                                <button class="button button-danger">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
