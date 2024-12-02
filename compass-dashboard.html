@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compass Analysis Dashboard</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --success: #059669;
+            --warning: #d97706;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.5;
+            color: var(--gray-800);
+            background: var(--gray-50);
+            margin: 0;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .title-section h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0 0 0.5rem 0;
+        }
+
+        .client-info {
+            text-align: right;
+        }
+
+        .client-name {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .metric-label {
+            color: var(--gray-700);
+            font-size: 0.875rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-trend {
+            color: var(--success);
+            font-size: 0.875rem;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            background: white;
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .filter-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--gray-200);
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+        }
+
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .analysis-card {
+            background: white;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            padding: 1.25rem;
+            background: var(--gray-50);
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .analysis-type {
+            font-size: 1.125rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .status-badge {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-weight: 500;
+        }
+
+        .status-complete { background: #dcfce7; color: var(--success); }
+        .status-in-progress { background: #fef3c7; color: var(--warning); }
+
+        .card-content {
+            padding: 1.25rem;
+        }
+
+        .metadata-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .metadata-item label {
+            color: var(--gray-700);
+            font-size: 0.75rem;
+        }
+
+        .metadata-item div {
+            font-weight: 500;
+            font-size: 0.875rem;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .tag {
+            background: var(--gray-100);
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.75rem;
+            color: var(--gray-700);
+        }
+
+        .card-footer {
+            padding: 1rem 1.25rem;
+            background: var(--gray-50);
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+        }
+
+        .btn-secondary {
+            background: white;
+            border: 1px solid var(--gray-200);
+        }
+
+        .actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="title-section">
+                <h1>Compass Analysis Dashboard</h1>
+                <p>Comprehensive view of all organizational analyses and assessments</p>
+            </div>
+            <div class="client-info">
+                <div class="client-name">Acme Corporation</div>
+                <div>Engagement Period: Jan 2024 - Dec 2024</div>
+                <div>Lead Consultant: Vallay Varro</div>
+            </div>
+        </header>
+
+        <div class="metrics">
+            <div class="metric-card">
+                <div class="metric-label">Total Analyses</div>
+                <div class="metric-value">24</div>
+                <div class="metric-trend">↑ 4 this month</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Stakeholders Engaged</div>
+                <div class="metric-value">127</div>
+                <div class="metric-trend">↑ 12 new</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Implementation Rate</div>
+                <div class="metric-value">76%</div>
+                <div class="metric-trend">↑ 5% increase</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Departments Covered</div>
+                <div class="metric-value">8/10</div>
+                <div class="metric-trend">80% coverage</div>
+            </div>
+        </div>
+
+        <div class="filters">
+            <div class="filter-group">
+                <label>Analysis Type</label>
+                <select>
+                    <option>All Types</option>
+                    <option>SWOT Analysis</option>
+                    <option>Change Readiness</option>
+                    <option>Culture Assessment</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Department</label>
+                <select>
+                    <option>All Departments</option>
+                    <option>Operations</option>
+                    <option>IT</option>
+                    <option>HR</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Status</label>
+                <select>
+                    <option>All Statuses</option>
+                    <option>Complete</option>
+                    <option>In Progress</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Date Range</label>
+                <input type="month" value="2024-01">
+            </div>
+        </div>
+
+        <div class="analysis-grid">
+            <div class="analysis-card">
+                <div class="card-header">
+                    <div class="analysis-type">
+                        Change Readiness Assessment
+                        <span class="status-badge status-complete">Complete</span>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="metadata-grid">
+                        <div class="metadata-item">
+                            <label>Date Completed</label>
+                            <div>Mar 15, 2024</div>
+                        </div>
+                        <div class="metadata-item">
+                            <label>Department</label>
+                            <div>Operations</div>
+                        </div>
+                        <div class="metadata-item">
+                            <label>Lead Analyst</label>
+                            <div>Vallay Varro</div>
+                        </div>
+                        <div class="metadata-item">
+                            <label>Readiness Score</label>
+                            <div>7.8/10</div>
+                        </div>
+                    </div>
+                    <div class="tags">
+                        <span class="tag">ERP Implementation</span>
+                        <span class="tag">Process Change</span>
+                        <span class="tag">Training Needs</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span>Last updated 2 days ago</span>
+                    <div class="actions">
+                        <button class="btn btn-secondary">History</button>
+                        <button class="btn btn-primary">View Report</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="analysis-card">
+                <div class="card-header">
+                    <div class="analysis-type">
+                        SWOT Analysis
+                        <span class="status-badge status-in-progress">In Progress</span>
+                    </div>
+                </div>
+                <div class="card-content">
+                    <div class="metadata-grid">
+                        <div class="metadata-item">
+                            <label>Start Date</label>
+                            <div>Mar 20, 2024</div>
+                        </div>
+                        <div class="metadata-item">
+                            <label>Department</label>
+                            <div>IT</div>
+                        </div>
+                        <div class="metadata-item">
+                            <label>Lead Analyst</label>
+                            <div>Mark Johnson</div>
+                        </div>
+                        <div class="metadata-item">
+                            <label>Completion</label>
+                            <div>65%</div>
+                        </div>
+                    </div>
+                    <div class="tags">
+                        <span class="tag">Digital Transformation</span>
+                        <span class="tag">Cloud Migration</span>
+                        <span class="tag">Security</span>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <span>Last updated today</span>
+                    <div class="actions">
+                        <button class="btn btn-secondary">Timeline</button>
+                        <button class="btn btn-primary">Continue</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
