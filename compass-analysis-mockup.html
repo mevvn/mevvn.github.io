@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compass Analysis</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.7/ace.js"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            line-height: 1.5;
+            color: var(--gray-800);
+            background-color: var(--gray-50);
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            padding: 2rem;
+        }
+
+        .header {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--gray-800);
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: var(--gray-700);
+            font-size: 1.125rem;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 2rem;
+            min-height: 800px;
+        }
+
+        .controls {
+            background: var(--gray-100);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            border: 1px solid var(--gray-200);
+        }
+
+        .section {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .section:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 1rem;
+        }
+
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--gray-200);
+            border-radius: 0.5rem;
+            background-color: white;
+            font-size: 0.875rem;
+            color: var(--gray-800);
+        }
+
+        .parameter {
+            margin-bottom: 1.25rem;
+        }
+
+        .parameter-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--gray-700);
+        }
+
+        input[type="range"] {
+            width: 100%;
+            margin: 0.5rem 0;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            color: var(--gray-700);
+            cursor: pointer;
+        }
+
+        .document-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .document-item {
+            background: white;
+            border: 1px solid var(--gray-200);
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
+
+        .document-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .document-weight {
+            padding-left: 1.5rem;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background-color: white;
+            border: 1px solid var(--gray-200);
+            color: var(--gray-800);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--gray-100);
+        }
+
+        .editor-container {
+            border: 1px solid var(--gray-200);
+            border-radius: 0.75rem;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        #prompt-editor {
+            width: 100%;
+            height: 100%;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>Compass Analysis</h1>
+            <p>Advanced organizational analysis and insights platform</p>
+        </header>
+
+        <main class="main-grid">
+            <aside class="controls">
+                <div class="section">
+                    <h3 class="section-title">Analysis Type</h3>
+                    <select>
+                        <option>Organizational Overview</option>
+                        <option>SWOT Analysis</option>
+                        <option>Strategic Recommendations</option>
+                        <option>Risk Analysis</option>
+                        <option>Change Readiness Assessment</option>
+                        <option>Stakeholder Analysis</option>
+                        <option>Capability Maturity Assessment</option>
+                        <option>Cultural Assessment</option>
+                        <option>Process Mapping & Analysis</option>
+                        <option>Resource Allocation Analysis</option>
+                        <option>Value Chain Analysis</option>
+                    </select>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">Model Parameters</h3>
+                    <div class="parameter">
+                        <div class="parameter-label">
+                            <span>Temperature</span>
+                            <span>0.7</span>
+                        </div>
+                        <input type="range" value="0.7" min="0" max="2" step="0.1">
+                    </div>
+                    <div class="parameter">
+                        <div class="parameter-label">
+                            <span>Frequency Penalty</span>
+                            <span>0.0</span>
+                        </div>
+                        <input type="range" value="0" min="-2" max="2" step="0.1">
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">Content Sections</h3>
+                    <div class="checkbox-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" checked> Executive Summary
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" checked> Detailed Analysis
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" checked> Recommendations
+                        </label>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">Reference Documents</h3>
+                    <div class="document-list">
+                        <div class="document-item">
+                            <div class="document-header">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" checked> Strategic Plan 2023
+                                </label>
+                            </div>
+                            <div class="document-weight">
+                                <input type="range" value="0.8" min="0" max="1" step="0.1">
+                            </div>
+                        </div>
+                        <div class="document-item">
+                            <div class="document-header">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" checked> Financial Reports Q1-Q4
+                                </label>
+                            </div>
+                            <div class="document-weight">
+                                <input type="range" value="1.0" min="0" max="1" step="0.1">
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary">Select Additional Documents</button>
+                </div>
+
+                <div class="button-group">
+                    <button class="btn btn-primary">Generate Analysis</button>
+                    <button class="btn btn-secondary">Reset</button>
+                </div>
+            </aside>
+
+            <section class="editor-container">
+                <div id="prompt-editor">System: You are an expert organizational development consultant...
+
+Task: Please provide a comprehensive analysis addressing:
+
+1. Executive Summary
+2. Key Findings
+3. Recommendations</div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Initialize ACE editor
+        const editor = ace.edit("prompt-editor");
+        editor.setTheme("ace/theme/tomorrow");
+        editor.session.setMode("ace/mode/markdown");
+        editor.setShowPrintMargin(false);
+        editor.session.setUseWrapMode(true);
+        
+        // Make the editor resizable to fit its container
+        editor.container.style.height = "100%";
+        editor.resize();
+    </script>
+</body>
+</html>
