@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIBE Analysis</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0;
+            padding: 0;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-top: 8px;
+            font-size: 16px;
+        }
+
+        .content {
+            margin-top: 40px;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+        }
+
+        .sidebar {
+            padding-right: 20px;
+        }
+
+        .temperature-control {
+            margin-top: 20px;
+        }
+
+        .temperature-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .temperature-slider {
+            width: 100%;
+            height: 4px;
+            background: #e0e0e0;
+            border-radius: 2px;
+            appearance: none;
+            outline: none;
+        }
+
+        .temperature-slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #5bbfdd;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .temperature-value {
+            margin-top: 8px;
+            color: #666;
+        }
+
+        .reference-section {
+            margin-top: 30px;
+        }
+
+        .reference-section h3 {
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        .main-content {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 400px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 300px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        .generate-button {
+            background-color: #5bbfdd;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.2s;
+        }
+
+        .generate-button:hover {
+            background-color: #4aa8c5;
+        }
+
+        .reset-button {
+            background-color: white;
+            color: #5bbfdd;
+            border: 1px solid #5bbfdd;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            margin-left: 10px;
+            transition: background-color 0.2s;
+        }
+
+        .reset-button:hover {
+            background-color: #f0f9fb;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>VIBE Analysis</h1>
+        <div class="subtitle">Advanced organizational analysis and insights platform</div>
+        
+        <div class="content">
+            <div class="sidebar">
+                <div class="temperature-control">
+                    <label class="temperature-label">Temperature</label>
+                    <input type="range" min="0" max="1" step="0.1" value="0.7" class="temperature-slider">
+                    <div class="temperature-value">Value: 0.7</div>
+                </div>
+
+                <div class="reference-section">
+                    <h3>Reference Documents</h3>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="budget">
+                        <label for="budget">Current Operating Budget</label>
+                    </div>
+                </div>
+
+                <div class="reference-section">
+                    <h3>Reference Compass Responses</h3>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="classification">
+                        <label for="classification">Organizational Classification Responses</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="story">
+                        <label for="story">Organizational Story Responses</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="echos">
+                        <label for="echos">ECHOS Responses</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="spoke">
+                        <label for="spoke">SPOKE Responses</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="p5">
+                        <label for="p5">P5 Responses</label>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button class="generate-button">Generate VIBE</button>
+                    <button class="reset-button">Reset</button>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <textarea placeholder="Analysis content will appear here..."></textarea>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Temperature slider functionality
+        const slider = document.querySelector('.temperature-slider');
+        const valueDisplay = document.querySelector('.temperature-value');
+        
+        slider.addEventListener('input', (e) => {
+            valueDisplay.textContent = `Value: ${e.target.value}`;
+        });
+    </script>
+</body>
+</html>
