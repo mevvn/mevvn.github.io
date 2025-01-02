@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organization Stories Analysis Output</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0;
+            color: #2c3e50;
+        }
+
+        .metadata {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .metadata-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .story-card {
+            background-color: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .story-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .theme-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            background-color: #e9ecef;
+        }
+
+        .story-quote {
+            font-style: italic;
+            color: #666;
+            padding: 15px;
+            border-left: 3px solid #5bbfdd;
+            margin: 15px 0;
+            background-color: white;
+        }
+
+        .narrative-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .narrative-element {
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .theme-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            background-color: #e9ecef;
+            margin: 2px;
+        }
+
+        .pattern-strength {
+            height: 4px;
+            background-color: #e9ecef;
+            border-radius: 2px;
+            margin: 10px 0;
+        }
+
+        .strength-value {
+            height: 100%;
+            background-color: #5bbfdd;
+            border-radius: 2px;
+        }
+
+        /* Markdown Styling */
+        .content h1 {
+            font-size: 28px;
+            margin: 40px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .content h2 {
+            font-size: 24px;
+            margin: 30px 0 15px;
+            color: #2c3e50;
+        }
+
+        .content h3 {
+            font-size: 20px;
+            margin: 25px 0 15px;
+            color: #34495e;
+        }
+
+        .content p {
+            margin: 15px 0;
+        }
+
+        .content ul, .content ol {
+            margin: 15px 0;
+            padding-left: 25px;
+        }
+
+        .content li {
+            margin: 8px 0;
+        }
+
+        .content blockquote {
+            margin: 20px 0;
+            padding: 10px 20px;
+            border-left: 4px solid #5bbfdd;
+            background-color: #f8f9fa;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline-item {
+            padding: 20px;
+            border-left: 2px solid #5bbfdd;
+            margin-left: 20px;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #5bbfdd;
+            border-radius: 50%;
+            left: -7px;
+            top: 24px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Organization Stories Analysis</h1>
+            <div class="metadata">
+                <div class="metadata-item">
+                    <i class="fas fa-calendar"></i>
+                    December 15, 2024 18:15
+                </div>
+                <div class="metadata-item">
+                    <i class="fas fa-users"></i>
+                    3 Responses Analyzed
+                </div>
+                <div class="metadata-item">
+                    <i class="fas fa-bookmark"></i>
+                    Core Narratives Identified
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="story-card">
+                <h2>Narrative Overview</h2>
+                <p>Analysis reveals a rich tapestry of organizational stories that consistently emphasize innovation, resilience, and community impact. Key themes emerge across founding, growth, and vision narratives.</p>
+                <div class="theme-tag">Innovation Legacy</div>
+                <div class="theme-tag">Community Focus</div>
+                <div class="theme-tag">Adaptive Growth</div>
+                <div class="theme-tag">Collaborative Culture</div>
+            </div>
+
+            <h2>Founding Story Analysis</h2>
+            <div class="story-quote">
+                "Born from a vision to transform industry standards, our founders recognized the need for a fundamentally different approach..."
+            </div>
+            <div class="pattern-strength">
+                <div class="strength-value" style="width: 95%"></div>
+            </div>
+
+            <h2>Growth Journey</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <h3>Origin Phase</h3>
+                    <p>Characterized by entrepreneurial spirit and innovation</p>
+                </div>
+                <div class="timeline-item">
+                    <h3>Expansion Era</h3>
+                    <p>Marked by strategic growth and market adaptation</p>
+                </div>
+                <div class="timeline-item">
+                    <h3>Transformation Period</h3>
+                    <p>Evolution into industry leadership position</p>
+                </div>
+            </div>
+
+            <h2>Impact Stories</h2>
+            <div class="narrative-grid">
+                <div class="narrative-element">
+                    <h3>Community Impact</h3>
+                    <p>Strong themes of social responsibility and local engagement</p>
+                    <div class="pattern-strength">
+                        <div class="strength-value" style="width: 88%"></div>
+                    </div>
+                </div>
+                <div class="narrative-element">
+                    <h3>Innovation Legacy</h3>
+                    <p>Consistent pattern of breakthrough solutions and industry firsts</p>
+                    <div class="pattern-strength">
+                        <div class="strength-value" style="width: 92%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Cultural Narratives</h2>
+            <blockquote>
+                The organization's culture is deeply rooted in collaborative innovation, with recurring themes of empowerment and shared success across all narratives.
+            </blockquote>
+
+            <div class="story-card">
+                <h3>Core Cultural Elements</h3>
+                <ul>
+                    <li><strong>Innovation Mindset:</strong> Embedded in daily operations</li>
+                    <li><strong>Collaborative Spirit:</strong> Strong emphasis on teamwork</li>
+                    <li><strong>Adaptive Learning:</strong> Continuous improvement focus</li>
+                </ul>
+            </div>
+
+            <h2>Vision Stories</h2>
+            <div class="story-card">
+                <h3>Future Narratives</h3>
+                <p>Clear alignment around transformative goals and industry leadership</p>
+                <div class="theme-tag">Market Leadership</div>
+                <div class="theme-tag">Sustainable Impact</div>
+                <div class="theme-tag">Innovation Hub</div>
+            </div>
+
+            <h2>Strategic Implications</h2>
+            <div class="narrative-element">
+                <h3>Recommendations</h3>
+                <ol>
+                    <li>
+                        <strong>Immediate Actions:</strong>
+                        <ul>
+                            <li>Document key founding stories</li>
+                            <li>Create narrative sharing platform</li>
+                            <li>Develop story ambassador program</li>
+                        </ul>
+                    </li>
+                    <li>
+                        <strong>Long-term Initiatives:</strong>
+                        <ul>
+                            <li>Establish story archive</li>
+                            <li>Integrate narratives into onboarding</li>
+                            <li>Create impact story framework</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

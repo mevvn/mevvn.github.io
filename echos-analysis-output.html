@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECHOS Analysis Output</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0;
+            color: #2c3e50;
+        }
+
+        .metadata {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .metadata-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .content {
+            font-size: 16px;
+        }
+
+        /* Markdown Styling */
+        .content h1 {
+            font-size: 28px;
+            margin: 40px 0 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .content h2 {
+            font-size: 24px;
+            margin: 30px 0 15px;
+            color: #2c3e50;
+        }
+
+        .content h3 {
+            font-size: 20px;
+            margin: 25px 0 15px;
+            color: #34495e;
+        }
+
+        .content p {
+            margin: 15px 0;
+        }
+
+        .content ul, .content ol {
+            margin: 15px 0;
+            padding-left: 25px;
+        }
+
+        .content li {
+            margin: 8px 0;
+        }
+
+        .content blockquote {
+            margin: 20px 0;
+            padding: 10px 20px;
+            border-left: 4px solid #5bbfdd;
+            background-color: #f8f9fa;
+        }
+
+        .insight-card {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid #e0e0e0;
+        }
+
+        .insight-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .confidence-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 14px;
+            background-color: #e9ecef;
+        }
+
+        .trend-indicator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            color: #28a745;
+        }
+
+        .trend-indicator.negative {
+            color: #dc3545;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .metric-card {
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .metric-title {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .pattern-strength {
+            height: 4px;
+            background-color: #e9ecef;
+            border-radius: 2px;
+            margin-top: 10px;
+        }
+
+        .strength-value {
+            height: 100%;
+            background-color: #5bbfdd;
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>ECHOS Analysis Results</h1>
+            <div class="metadata">
+                <div class="metadata-item">
+                    <i class="fas fa-calendar"></i>
+                    December 15, 2024 16:30
+                </div>
+                <div class="metadata-item">
+                    <i class="fas fa-users"></i>
+                    3 Responses Analyzed
+                </div>
+                <div class="metadata-item">
+                    <i class="fas fa-chart-line"></i>
+                    88% Pattern Confidence
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <h1>Executive Summary</h1>
+            <p>Analysis of selected ECHOS responses reveals strong engagement patterns with notable cultural alignment across departments. Harmony metrics indicate positive team dynamics with specific opportunities for enhancement in cross-functional collaboration.</p>
+
+            <div class="metric-grid">
+                <div class="metric-card">
+                    <div class="metric-title">Engagement Score</div>
+                    <div class="metric-value">85%</div>
+                    <div class="trend-indicator">
+                        <i class="fas fa-arrow-up"></i>
+                        +5% from previous
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Cultural Alignment</div>
+                    <div class="metric-value">92%</div>
+                    <div class="trend-indicator">
+                        <i class="fas fa-arrow-up"></i>
+                        +3% from previous
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-title">Harmony Index</div>
+                    <div class="metric-value">78%</div>
+                    <div class="trend-indicator">
+                        <i class="fas fa-arrow-down"></i>
+                        -2% from previous
+                    </div>
+                </div>
+            </div>
+
+            <h2>Engagement Patterns</h2>
+            <div class="insight-card">
+                <div class="insight-header">
+                    <h3>Employee Connection Metrics</h3>
+                    <span class="confidence-badge">High Confidence</span>
+                </div>
+                <ul>
+                    <li><strong>Mission Alignment:</strong> Strong connection to organizational purpose</li>
+                    <li><strong>Team Dynamics:</strong> Positive collaborative environment</li>
+                    <li><strong>Leadership Support:</strong> Clear communication channels</li>
+                </ul>
+                <div class="pattern-strength">
+                    <div class="strength-value" style="width: 85%"></div>
+                </div>
+            </div>
+
+            <h2>Cultural Indicators</h2>
+            <blockquote>
+                "Organizational culture demonstrates strong alignment with core values, particularly in areas of innovation and collaboration. Team members consistently exhibit behaviors that reinforce cultural priorities."
+            </blockquote>
+
+            <h2>Harmony Metrics</h2>
+            <div class="insight-card">
+                <div class="insight-header">
+                    <h3>Cross-functional Collaboration</h3>
+                    <span class="confidence-badge">Medium Confidence</span>
+                </div>
+                <p>Team interactions show positive patterns with specific areas for enhancement:</p>
+                <ul>
+                    <li>Communication flows: Well-established but with optimization opportunities</li>
+                    <li>Resource sharing: Effective with room for improvement</li>
+                    <li>Joint initiatives: Strong participation and outcomes</li>
+                </ul>
+                <div class="pattern-strength">
+                    <div class="strength-value" style="width: 78%"></div>
+                </div>
+            </div>
+
+            <h2>Organizational Outlook</h2>
+            <ul>
+                <li><strong>Growth Mindset:</strong> Evident across all responses</li>
+                <li><strong>Innovation Readiness:</strong> High appetite for new approaches</li>
+                <li><strong>Change Adaptability:</strong> Strong foundation for transformation</li>
+            </ul>
+
+            <h2>Strategic Recommendations</h2>
+            <h3>Immediate Actions (0-3 months)</h3>
+            <ul>
+                <li>Launch cross-functional collaboration initiative</li>
+                <li>Enhance communication channels</li>
+                <li>Implement cultural reinforcement programs</li>
+            </ul>
+
+            <h3>Medium-term Initiatives (3-6 months)</h3>
+            <ul>
+                <li>Develop leadership engagement framework</li>
+                <li>Establish harmony monitoring system</li>
+                <li>Create cultural ambassador program</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
