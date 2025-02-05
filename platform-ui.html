@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cap.Ai Explorer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            min-height: 100vh;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 2rem;
+            background-color: white;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .private-badge {
+            background-color: #f5f5f5;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            margin-left: 0.5rem;
+        }
+
+        .main-content {
+            display: flex;
+            padding: 2rem;
+            gap: 2rem;
+        }
+
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .input-container {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .input-area {
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .input-area textarea {
+            width: 100%;
+            border: none;
+            background: transparent;
+            padding: 0.5rem;
+            font-size: 1rem;
+            resize: none;
+            outline: none;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.5rem;
+        }
+
+        .controls-left {
+            display: flex;
+            gap: 0.5rem;
+            flex: 1;
+        }
+
+        .controls-right {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .model-select, .style-select {
+            padding: 0.5rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            background: white;
+            font-size: 0.875rem;
+            min-width: 140px;
+        }
+
+        .icon-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            transition: color 0.2s;
+        }
+
+        .icon-button:hover {
+            color: #333;
+        }
+
+        .send-button {
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 0.5rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .send-button:hover {
+            background-color: #2563eb;
+        }
+
+        .sidebar {
+            width: 300px;
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .sidebar h2 {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            color: #333;
+        }
+
+        .checkbox-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .checkbox-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .checkbox-item label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+        }
+
+        .sub-checkboxes {
+            margin-left: 1.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .chat-history {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .chat-history h2 {
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            color: #333;
+        }
+
+        .history-item {
+            padding: 0.75rem;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .history-item:hover {
+            background-color: #f8f9fa;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-title {
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+            color: #333;
+        }
+
+        .history-meta {
+            font-size: 0.75rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="title">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+            </svg>
+            Cap.Ai Explorer
+            <span class="private-badge">Private</span>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="chat-area">
+            <div class="input-container">
+                <div class="input-area">
+                    <textarea placeholder="What can Cap.Ai help you with today?" rows="3"></textarea>
+                </div>
+                <div class="controls">
+                    <div class="controls-left">
+                        <select class="model-select">
+                            <option>Select a Model</option>
+                            <option>GPT-4 Turbo</option>
+                            <option>Claude 3 Opus</option>
+                            <option>Gemini Pro</option>
+                        </select>
+                        <select class="style-select">
+                            <option>Select a Style</option>
+                            <option>Professional</option>
+                            <option>Casual</option>
+                            <option>Technical</option>
+                        </select>
+                    </div>
+                    <div class="controls-right">
+                        <button class="icon-button" title="Attach files">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"></path>
+                            </svg>
+                        </button>
+                        <button class="send-button">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 2L11 13"></path>
+                                <path d="M22 2l-7 20-4-9-9-4 20-7z"></path>
+                            </svg>
+                            Send
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-history">
+                <h2>Recent Conversations</h2>
+                <div class="history-item">
+                    <div class="history-title">Analysis of Q4 Marketing Performance</div>
+                    <div class="history-meta">Today at 2:30 PM</div>
+                </div>
+                <div class="history-item">
+                    <div class="history-title">Program Impact Assessment 2024</div>
+                    <div class="history-meta">Yesterday at 11:15 AM</div>
+                </div>
+                <div class="history-item">
+                    <div class="history-title">Board Meeting Preparation Notes</div>
+                    <div class="history-meta">Feb 2, 2024 at 4:45 PM</div>
+                </div>
+                <div class="history-item">
+                    <div class="history-title">Development Strategy Review</div>
+                    <div class="history-meta">Jan 31, 2024 at 9:20 AM</div>
+                </div>
+                <div class="history-item">
+                    <div class="history-title">External Affairs Report Summary</div>
+                    <div class="history-meta">Jan 28, 2024 at 3:10 PM</div>
+                </div>
+            </div>
+        </div>
+
+        <aside class="sidebar">
+            <h2>Selected Data Core Components</h2>
+            <div class="checkbox-group">
+                <div class="checkbox-item">
+                    <label>
+                        <input type="checkbox" name="component" value="vibed">
+                        VIBED
+                    </label>
+                </div>
+                <div class="checkbox-item">
+                    <label>
+                        <input type="checkbox" name="component" value="echos">
+                        ECHOS
+                    </label>
+                </div>
+                <div class="checkbox-item">
+                    <label>
+                        <input type="checkbox" name="component" value="spoke">
+                        SPOKE
+                    </label>
+                </div>
+                <div class="checkbox-item">
+                    <label>
+                        <input type="checkbox" name="component" value="ppppp">
+                        PPPPP
+                    </label>
+                </div>
+                <div class="checkbox-item">
+                    <label>
+                        <input type="checkbox" name="component" value="dotes">
+                        DOTES
+                    </label>
+                    <div class="sub-checkboxes">
+                        <div class="checkbox-item">
+                            <label>
+                                <input type="checkbox" name="dotes-sub" value="operations">
+                                Operations
+                            </label>
+                        </div>
+                        <div class="checkbox-item">
+                            <label>
+                                <input type="checkbox" name="dotes-sub" value="development">
+                                Development
+                            </label>
+                        </div>
+                        <div class="checkbox-item">
+                            <label>
+                                <input type="checkbox" name="dotes-sub" value="marketing">
+                                Marketing and Communications
+                            </label>
+                        </div>
+                        <div class="checkbox-item">
+                            <label>
+                                <input type="checkbox" name="dotes-sub" value="external">
+                                External Affairs
+                            </label>
+                        </div>
+                        <div class="checkbox-item">
+                            <label>
+                                <input type="checkbox" name="dotes-sub" value="outreach">
+                                Outreach
+                            </label>
+                        </div>
+                        <div class="checkbox-item">
+                            <label>
+                                <input type="checkbox" name="dotes-sub" value="programs">
+                                Programs
+                            </label>
+                        </div>
+                        <div class="checkbox-item">
+                            <label>
+                                <input type="checkbox" name="dotes-sub" value="board">
+                                Board Relations
+                            </label>
+                        </div>
+                        <div class="checkbox-item">
+                            <label>
+                                <input type="checkbox" name="dotes-sub" value="finance">
+                                Finance and Budgeting
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </main>
+</body>
+</html>
