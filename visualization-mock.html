@@ -1,0 +1,1682 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CapAi.city DataCore Visualization</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+    <style>
+:root {
+    --primary-color: #4361ee;
+    --primary-light: #e9efff;
+    --secondary-color: #3f37c9;
+    --text-color: #333;
+    --text-light: #666;
+    --background-color: #f8f9fa;
+    --card-color: #fff;
+    --border-color: #e0e0e0;
+    --success-color: #4CAF50;
+    --info-color: #2196F3;
+    --warning-color: #FF9800;
+    --danger-color: #F44336;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --vibed-color: #4361ee;
+    --echos-color: #3a0ca3;
+    --spoke-color: #7209b7;
+    --p5-color: #f72585;
+    --dotes-color: #4cc9f0;
+    --employee-color: #4361ee;
+    --executive-color: #3a0ca3;
+    --board-color: #7209b7;
+    --partner-color: #f72585;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+.container {
+    max-width: 1600px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header styles */
+header {
+    background-color: var(--card-color);
+    box-shadow: var(--shadow);
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo-icon {
+    width: 40px;
+    height: 40px;
+    background-color: var(--primary-color);
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.logo-text {
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--primary-color);
+}
+
+.user-controls {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: var(--primary-light);
+    display: grid;
+    place-items: center;
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+.export-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.export-btn:hover {
+    background-color: var(--secondary-color);
+}
+
+.back-btn {
+    background-color: transparent;
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.back-btn:hover {
+    background-color: var(--background-color);
+}
+
+/* Main content styles */
+main {
+    padding: 30px 0;
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100vh - 80px);
+}
+
+.visualization-title {
+    margin-bottom: 20px;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nav-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.layout-container {
+    display: grid;
+    grid-template-columns: 250px 1fr 280px;
+    gap: 20px;
+    height: calc(100vh - 180px);
+}
+
+.filters-panel {
+    background-color: var(--card-color);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+    max-height: 100%;
+    overflow-y: auto;
+}
+
+.filters-panel h3 {
+    font-size: 16px;
+    color: var(--text-light);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.filter-group {
+    margin-bottom: 20px;
+}
+
+.filter-group h4 {
+    font-size: 14px;
+    margin-bottom: 10px;
+    color: var(--text-color);
+}
+
+.date-range {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.date-input {
+    padding: 8px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.checkbox-item input {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--primary-color);
+}
+
+.checkbox-item label {
+    font-size: 14px;
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.filter-btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    flex: 1;
+    text-align: center;
+}
+
+.apply-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+}
+
+.apply-btn:hover {
+    background-color: var(--secondary-color);
+}
+
+.reset-btn {
+    background-color: white;
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+.reset-btn:hover {
+    background-color: var(--background-color);
+}
+
+.visualization-panel {
+    background-color: var(--card-color);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+}
+
+.visualization-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.visualization-header h3 {
+    font-size: 16px;
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.visualization-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.viz-control-btn {
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.viz-control-btn:hover {
+    background-color: var(--primary-light);
+}
+
+.viz-control-btn.active {
+    background-color: var(--primary-light);
+    color: var(--primary-color);
+}
+
+.visualization-area {
+    flex: 1;
+    background-color: var(--primary-light);
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+.selection-panel {
+    background-color: var(--card-color);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+    overflow-y: auto;
+}
+
+.selection-panel h3 {
+    font-size: 16px;
+    color: var(--text-light);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.selection-count {
+    background-color: var(--primary-light);
+    color: var(--primary-color);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.selection-list {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 15px;
+}
+
+.selection-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background-color: var(--primary-light);
+    position: relative;
+}
+
+.selection-indicator {
+    width: 4px;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+
+.selection-item.vibed .selection-indicator {
+    background-color: var(--vibed-color);
+}
+
+.selection-item.echos .selection-indicator {
+    background-color: var(--echos-color);
+}
+
+.selection-item.spoke .selection-indicator {
+    background-color: var(--spoke-color);
+}
+
+.selection-item.p5 .selection-indicator {
+    background-color: var(--p5-color);
+}
+
+.selection-item.dotes .selection-indicator {
+    background-color: var(--dotes-color);
+}
+
+.selection-type {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-right: 5px;
+}
+
+.type-vibed {
+    background-color: rgba(67, 97, 238, 0.1);
+    color: var(--vibed-color);
+}
+
+.type-echos {
+    background-color: rgba(58, 12, 163, 0.1);
+    color: var(--echos-color);
+}
+
+.type-spoke {
+    background-color: rgba(114, 9, 183, 0.1);
+    color: var(--spoke-color);
+}
+
+.type-p5 {
+    background-color: rgba(247, 37, 133, 0.1);
+    color: var(--p5-color);
+}
+
+.type-dotes {
+    background-color: rgba(76, 201, 240, 0.1);
+    color: var(--dotes-color);
+}
+
+.selection-content {
+    flex: 1;
+}
+
+.selection-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 5px;
+}
+
+.selection-title {
+    font-weight: 500;
+    font-size: 14px;
+}
+
+.selection-meta {
+    font-size: 12px;
+    color: var(--text-light);
+    margin-bottom: 5px;
+}
+
+.selection-preview {
+    font-size: 12px;
+    color: var(--text-color);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.remove-selection {
+    background: none;
+    border: none;
+    color: var(--text-light);
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+}
+
+.remove-selection:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: var(--danger-color);
+}
+
+.selection-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.selection-btn {
+    flex: 1;
+    padding: 10px;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.analyze-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+}
+
+.analyze-btn:hover {
+    background-color: var(--secondary-color);
+}
+
+.clear-btn {
+    background-color: white;
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+.clear-btn:hover {
+    background-color: var(--background-color);
+}
+
+/* Legend */
+.visualization-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 10px;
+    background-color: var(--card-color);
+    border-radius: 8px;
+    margin-top: 15px;
+}
+
+.legend-section {
+    margin-right: 20px;
+}
+
+.legend-title {
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.legend-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+}
+
+.legend-color {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+}
+
+/* Selection tools */
+.selection-tools {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background-color: white;
+    border-radius: 6px;
+    box-shadow: var(--shadow);
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    z-index: 10;
+}
+
+.tool-btn {
+    width: 36px;
+    height: 36px;
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.tool-btn:hover {
+    background-color: var(--primary-light);
+}
+
+.tool-btn.active {
+    background-color: var(--primary-light);
+    color: var(--primary-color);
+}
+
+/* Node styles */
+.node {
+    cursor: pointer;
+    transition: stroke-width 0.2s;
+}
+
+.node:hover {
+    stroke: var(--primary-color);
+    stroke-width: 2px;
+}
+
+.node.selected {
+    stroke: var(--primary-color);
+    stroke-width: 2px;
+}
+
+/* Tooltip */
+.tooltip {
+    position: absolute;
+    background-color: white;
+    padding: 10px;
+    border-radius: 6px;
+    box-shadow: var(--shadow);
+    pointer-events: none;
+    max-width: 300px;
+    font-size: 12px;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.tooltip-header {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 5px;
+}
+
+.tooltip-content {
+    margin-bottom: 5px;
+}
+
+.tooltip-meta {
+    font-size: 11px;
+    color: var(--text-light);
+}
+
+/* Rectangle selection overlay */
+.selection-rect {
+    fill: rgba(67, 97, 238, 0.1);
+    stroke: var(--primary-color);
+    stroke-width: 1px;
+}
+
+/* Circle selection overlay */
+.circle-selection {
+    fill: rgba(67, 97, 238, 0.1);
+    stroke: var(--primary-color);
+    stroke-width: 1px;
+    pointer-events: none;
+}
+
+/* Visualization canvas */
+.visualization-canvas {
+    width: 100%;
+    height: 100%;
+}
+
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">CA</div>
+                    <div class="logo-text">CapAi.city DataCore</div>
+                </div>
+                <div class="user-controls">
+                    <button class="back-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="19" y1="12" x2="5" y2="12"></line>
+                            <polyline points="12 19 5 12 12 5"></polyline>
+                        </svg>
+                        Back to Dashboard
+                    </button>
+                    <div class="user-info">
+                        <div class="user-avatar">JD</div>
+                        <span>John Doe</span>
+                    </div>
+                    <button class="export-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        Export
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="visualization-title">
+                <h2>DataCore Visualization</h2>
+            </div>
+
+            <div class="layout-container">
+                <div class="filters-panel">
+                    <h3>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+                        </svg>
+                        Filters
+                    </h3>
+                    <div class="filter-group">
+                        <h4>Date Range</h4>
+                        <div class="date-range">
+                            <input type="date" class="date-input" placeholder="Start Date" value="2023-01-01">
+                            <input type="date" class="date-input" placeholder="End Date" value="2023-06-30">
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <h4>Stakeholder Types</h4>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="employee" checked>
+                                <label for="employee">Employees</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="executive" checked>
+                                <label for="executive">Executives</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="board" checked>
+                                <label for="board">Board Members</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="partner" checked>
+                                <label for="partner">Partners</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filter-group">
+                        <h4>DataCore Components</h4>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="vibed" checked>
+                                <label for="vibed">VIBED</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="echos" checked>
+                                <label for="echos">ECHOS</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="spoke" checked>
+                                <label for="spoke">SPOKE</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="p5" checked>
+                                <label for="p5">P5</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="dotes" checked>
+                                <label for="dotes">DOTES</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="filter-buttons">
+                        <button class="filter-btn apply-btn">Apply Filters</button>
+                        <button class="filter-btn reset-btn">Reset</button>
+                    </div>
+                </div>
+
+                <div class="visualization-panel">
+                    <div class="visualization-header">
+                        <h3>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8"></circle>
+                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                            </svg>
+                            Cluster Visualization
+                        </h3>
+                        <div class="visualization-controls">
+                            <button class="viz-control-btn active" title="Zoom In">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                    <line x1="11" y1="8" x2="11" y2="14"></line>
+                                    <line x1="8" y1="11" x2="14" y2="11"></line>
+                                </svg>
+                            </button>
+                            <button class="viz-control-btn" title="Zoom Out">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="11" cy="11" r="8"></circle>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                    <line x1="8" y1="11" x2="14" y2="11"></line>
+                                </svg>
+                            </button>
+                            <button class="viz-control-btn" title="Reset View">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 4v6h6"></path>
+                                    <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="visualization-area" id="visualization">
+                        <div class="selection-tools">
+                            <button class="tool-btn active" title="Select Individual Nodes">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z"></path>
+                                    <path d="M13 13l6 6"></path>
+                                </svg>
+                            </button>
+                            <button class="tool-btn" title="Rectangle Selection">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                </svg>
+                            </button>
+                            <button class="tool-btn" title="Circle Selection">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                </svg>
+                            </button>
+                            <button class="tool-btn" title="Pan View">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                                </svg>
+                            </button>
+                        </div>
+                        <svg width="100%" height="100%" id="viz-svg"></svg>
+                    </div>
+                    <div class="visualization-legend">
+                        <div class="legend-section">
+                            <div class="legend-title">DataCore Components</div>
+                            <div class="legend-items">
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: var(--vibed-color);"></div>
+                                    <span>VIBED</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: var(--echos-color);"></div>
+                                    <span>ECHOS</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: var(--spoke-color);"></div>
+                                    <span>SPOKE</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: var(--p5-color);"></div>
+                                    <span>P5</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: var(--dotes-color);"></div>
+                                    <span>DOTES</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="legend-section">
+                            <div class="legend-title">Stakeholder Types</div>
+                            <div class="legend-items">
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: var(--employee-color);"></div>
+                                    <span>Employees</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: var(--executive-color);"></div>
+                                    <span>Executives</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: var(--board-color);"></div>
+                                    <span>Board Members</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background-color: var(--partner-color);"></div>
+                                    <span>Partners</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="selection-panel">
+                    <h3>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 11 12 14 22 4"></polyline>
+                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                        </svg>
+                        Selected Elements <span class="selection-count">5</span>
+                    </h3>
+                    <div class="selection-list" id="selection-list">
+                        <div class="selection-item vibed">
+                            <div class="selection-indicator"></div>
+                            <div class="selection-content">
+                                <div class="selection-header">
+                                    <div>
+                                        <span class="selection-type type-vibed">VIBED</span>
+                                        <span class="selection-title">Core Values Statement</span>
+                                    </div>
+                                    <button class="remove-selection">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="selection-meta">Employee • Jan 15, 2023</div>
+                                <div class="selection-preview">Our organization values transparency, collaboration, and innovation in everything we do. We believe in creating an inclusive environment where diverse...</div>
+                            </div>
+                        </div>
+
+                        <div class="selection-item echos">
+                            <div class="selection-indicator"></div>
+                            <div class="selection-content">
+                                <div class="selection-header">
+                                    <div>
+                                        <span class="selection-type type-echos">ECHOS</span>
+                                        <span class="selection-title">Market Trends Analysis</span>
+                                    </div>
+                                    <button class="remove-selection">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="selection-meta">Executive • Feb 22, 2023</div>
+                                <div class="selection-preview">The competitive landscape is shifting rapidly with new entrants leveraging AI technologies. We need to position ourselves as thought leaders...</div>
+                            </div>
+                        </div>
+
+                        <div class="selection-item spoke">
+                            <div class="selection-indicator"></div>
+                            <div class="selection-content">
+                                <div class="selection-header">
+                                    <div>
+                                        <span class="selection-type type-spoke">SPOKE</span>
+                                        <span class="selection-title">Community Engagement Strategy</span>
+                                    </div>
+                                    <button class="remove-selection">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="selection-meta">Partner • Mar 10, 2023</div>
+                                <div class="selection-preview">Our joint initiatives with community partners have shown promising results. The feedback indicates a strong desire for more educational...</div>
+                            </div>
+                        </div>
+
+                        <div class="selection-item p5">
+                            <div class="selection-indicator"></div>
+                            <div class="selection-content">
+                                <div class="selection-header">
+                                    <div>
+                                        <span class="selection-type type-p5">P5</span>
+                                        <span class="selection-title">Resource Allocation Framework</span>
+                                    </div>
+                                    <button class="remove-selection">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="selection-meta">Board Member • Apr 5, 2023</div>
+                                <div class="selection-preview">The current allocation model prioritizes short-term gains over sustainable growth. We need to rebalance our investment in infrastructure...</div>
+                            </div>
+                        </div>
+
+                        <div class="selection-item dotes">
+                            <div class="selection-indicator"></div>
+                            <div class="selection-content">
+                                <div class="selection-header">
+                                    <div>
+                                        <span class="selection-type type-dotes">DOTES</span>
+                                        <span class="selection-title">Q1 Project Retrospective</span>
+                                    </div>
+                                    <button class="remove-selection">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <div class="selection-meta">Employee • May 18, 2023</div>
+                                <div class="selection-preview">The cross-functional team approach significantly improved communication. However, we still struggle with knowledge sharing across departments...</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="selection-actions">
+                        <button class="selection-btn analyze-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                            </svg>
+                            Analyze Selection
+                        </button>
+                        <button class="selection-btn clear-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                            Clear All
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="tooltip" id="node-tooltip" style="opacity: 0;">
+        <div class="tooltip-header">
+            <span class="tooltip-type"></span>
+            <span class="tooltip-title"></span>
+        </div>
+        <div class="tooltip-content"></div>
+        <div class="tooltip-meta"></div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Initialize visualization
+        initClusterVisualization();
+
+        // Setup UI interactions
+        setupSelectionTools();
+        setupFilterButtons();
+        setupSelectionActions();
+    });
+
+    /**
+     * Initialize the cluster visualization with sample data
+     */
+    function initClusterVisualization() {
+        // Generate sample data for visualization
+        const dataTypes = ['VIBED', 'ECHOS', 'SPOKE', 'P5', 'DOTES'];
+        const stakeholderTypes = ['Employee', 'Executive', 'Board', 'Partner'];
+        const typeColors = {
+            'VIBED': getComputedStyle(document.documentElement).getPropertyValue('--vibed-color'),
+            'ECHOS': getComputedStyle(document.documentElement).getPropertyValue('--echos-color'),
+            'SPOKE': getComputedStyle(document.documentElement).getPropertyValue('--spoke-color'),
+            'P5': getComputedStyle(document.documentElement).getPropertyValue('--p5-color'),
+            'DOTES': getComputedStyle(document.documentElement).getPropertyValue('--dotes-color')
+        };
+
+        const stakeholderColors = {
+            'Employee': getComputedStyle(document.documentElement).getPropertyValue('--employee-color'),
+            'Executive': getComputedStyle(document.documentElement).getPropertyValue('--executive-color'),
+            'Board': getComputedStyle(document.documentElement).getPropertyValue('--board-color'),
+            'Partner': getComputedStyle(document.documentElement).getPropertyValue('--partner-color')
+        };
+
+        // Generate sample data - 120 nodes in clusters
+        const nodes = [];
+
+        // Create clusters of data
+        // VIBED Cluster
+        for (let i = 0; i < 30; i++) {
+            const stakeholder = stakeholderTypes[Math.floor(Math.random() * stakeholderTypes.length)];
+            nodes.push({
+                id: `node-${nodes.length}`,
+                type: 'VIBED',
+                stakeholder: stakeholder,
+                title: `VIBED Element ${i + 1}`,
+                content: `This is a sample VIBED element from a ${stakeholder.toLowerCase()}.`,
+                x: 200 + Math.random() * 150,
+                y: 200 + Math.random() * 150,
+                r: Math.random() * 5 + 10,
+                selected: false
+            });
+        }
+
+        // ECHOS Cluster
+        for (let i = 0; i < 25; i++) {
+            const stakeholder = stakeholderTypes[Math.floor(Math.random() * stakeholderTypes.length)];
+            nodes.push({
+                id: `node-${nodes.length}`,
+                type: 'ECHOS',
+                stakeholder: stakeholder,
+                title: `ECHOS Element ${i + 1}`,
+                content: `This is a sample ECHOS element from a ${stakeholder.toLowerCase()}.`,
+                x: 500 + Math.random() * 150,
+                y: 200 + Math.random() * 150,
+                r: Math.random() * 5 + 10,
+                selected: false
+            });
+        }
+
+        // SPOKE Cluster
+        for (let i = 0; i < 20; i++) {
+            const stakeholder = stakeholderTypes[Math.floor(Math.random() * stakeholderTypes.length)];
+            nodes.push({
+                id: `node-${nodes.length}`,
+                type: 'SPOKE',
+                stakeholder: stakeholder,
+                title: `SPOKE Element ${i + 1}`,
+                content: `This is a sample SPOKE element from a ${stakeholder.toLowerCase()}.`,
+                x: 650 + Math.random() * 150,
+                y: 400 + Math.random() * 150,
+                r: Math.random() * 5 + 10,
+                selected: false
+            });
+        }
+
+        // P5 Cluster
+        for (let i = 0; i < 15; i++) {
+            const stakeholder = stakeholderTypes[Math.floor(Math.random() * stakeholderTypes.length)];
+            nodes.push({
+                id: `node-${nodes.length}`,
+                type: 'P5',
+                stakeholder: stakeholder,
+                title: `P5 Element ${i + 1}`,
+                content: `This is a sample P5 element from a ${stakeholder.toLowerCase()}.`,
+                x: 350 + Math.random() * 150,
+                y: 450 + Math.random() * 150,
+                r: Math.random() * 5 + 10,
+                selected: false
+            });
+        }
+
+        // DOTES Cluster
+        for (let i = 0; i < 30; i++) {
+            const stakeholder = stakeholderTypes[Math.floor(Math.random() * stakeholderTypes.length)];
+            nodes.push({
+                id: `node-${nodes.length}`,
+                type: 'DOTES',
+                stakeholder: stakeholder,
+                title: `DOTES Element ${i + 1}`,
+                content: `This is a sample DOTES element from a ${stakeholder.toLowerCase()}.`,
+                x: 200 + Math.random() * 150,
+                y: 350 + Math.random() * 150,
+                r: Math.random() * 5 + 10,
+                selected: false
+            });
+        }
+
+        // Add outliers for each type
+        dataTypes.forEach((type, index) => {
+            const stakeholder = stakeholderTypes[Math.floor(Math.random() * stakeholderTypes.length)];
+            nodes.push({
+                id: `node-outlier-${index}`,
+                type: type,
+                stakeholder: stakeholder,
+                title: `${type} Outlier`,
+                content: `This is an outlier ${type} element from a ${stakeholder.toLowerCase()}.`,
+                x: 100 + Math.random() * 700,
+                y: 100 + Math.random() * 400,
+                r: Math.random() * 5 + 10,
+                selected: false
+            });
+        });
+
+        // Initialize SVG
+        const svg = d3.select("#viz-svg");
+        const width = svg.node().parentNode.clientWidth;
+        const height = svg.node().parentNode.clientHeight;
+
+        // Create nodes
+        const nodeElements = svg.selectAll("circle")
+            .data(nodes)
+            .enter()
+            .append("circle")
+            .attr("class", "node")
+            .attr("cx", d => d.x)
+            .attr("cy", d => d.y)
+            .attr("r", d => d.r)
+            .attr("fill", d => typeColors[d.type])
+            .attr("stroke", d => stakeholderColors[d.stakeholder])
+            .attr("stroke-width", 1)
+            .on("mouseover", function (event, d) {
+                d3.select(this).attr("stroke-width", 2);
+
+                // Show tooltip
+                const tooltip = d3.select("#node-tooltip");
+                tooltip.style("opacity", 1)
+                    .style("left", (event.pageX + 10) + "px")
+                    .style("top", (event.pageY + 10) + "px");
+
+                tooltip.select(".tooltip-type").text(d.type);
+                tooltip.select(".tooltip-title").text(d.title);
+                tooltip.select(".tooltip-content").text(d.content);
+                tooltip.select(".tooltip-meta").text(`Stakeholder: ${d.stakeholder}`);
+            })
+            .on("mouseout", function () {
+                if (!d3.select(this).classed("selected")) {
+                    d3.select(this).attr("stroke-width", 1);
+                }
+
+                // Hide tooltip
+                d3.select("#node-tooltip")
+                    .style("opacity", 0);
+            })
+            .on("click", function (event, d) {
+                if (currentTool === "select") {
+                    // Toggle selection
+                    d.selected = !d.selected;
+
+                    if (d.selected) {
+                        d3.select(this).classed("selected", true);
+                        d3.select(this).attr("stroke-width", 2);
+                        addToSelectionPanel(d);
+                    } else {
+                        d3.select(this).classed("selected", false);
+                        d3.select(this).attr("stroke-width", 1);
+                        removeFromSelectionPanel(d.id);
+                    }
+                }
+            });
+
+        // Pre-select a few nodes to demonstrate selection
+        const initialSelections = [3, 25, 48, 75, 90];
+        initialSelections.forEach(index => {
+            if (nodes[index]) {
+                nodes[index].selected = true;
+                d3.select(nodeElements.nodes()[index]).classed("selected", true);
+                d3.select(nodeElements.nodes()[index]).attr("stroke-width", 2);
+            }
+        });
+
+        // Store nodes data globally for other functions
+        window.visualizationNodes = nodes;
+        window.nodeElements = nodeElements;
+    }
+
+    /**
+     * Set up selection tools functionality
+     */
+    function setupSelectionTools() {
+        // Selection tools functionality
+        window.currentTool = "select";
+        let isSelecting = false;
+        let startPoint = {};
+        let selectionRect = null;
+        let selectionCircle = null;
+
+        const svg = d3.select("#viz-svg");
+
+        // Tool selection
+        d3.selectAll(".tool-btn").on("click", function () {
+            // Remove active class from all buttons
+            d3.selectAll(".tool-btn").classed("active", false);
+
+            // Add active class to clicked button
+            d3.select(this).classed("active", true);
+
+            // Set current tool based on title attribute
+            currentTool = d3.select(this).attr("title").toLowerCase();
+
+            if (currentTool.includes("individual")) {
+                window.currentTool = "select";
+            } else if (currentTool.includes("rectangle")) {
+                window.currentTool = "rectangle";
+            } else if (currentTool.includes("circle")) {
+                window.currentTool = "circle";
+            } else if (currentTool.includes("pan")) {
+                window.currentTool = "pan";
+            }
+        });
+
+        // Rectangle selection
+        svg.on("mousedown", function (event) {
+            if (window.currentTool === "rectangle") {
+                isSelecting = true;
+
+                // Get mouse coordinates relative to SVG
+                const svgRect = svg.node().getBoundingClientRect();
+                startPoint = {
+                    x: event.clientX - svgRect.left,
+                    y: event.clientY - svgRect.top
+                };
+
+                // Create selection rectangle
+                selectionRect = svg.append("rect")
+                    .attr("class", "selection-rect")
+                    .attr("x", startPoint.x)
+                    .attr("y", startPoint.y)
+                    .attr("width", 0)
+                    .attr("height", 0);
+            } else if (window.currentTool === "circle") {
+                isSelecting = true;
+
+                // Get mouse coordinates relative to SVG
+                const svgRect = svg.node().getBoundingClientRect();
+                startPoint = {
+                    x: event.clientX - svgRect.left,
+                    y: event.clientY - svgRect.top
+                };
+
+                // Create selection circle
+                selectionCircle = svg.append("circle")
+                    .attr("class", "circle-selection")
+                    .attr("cx", startPoint.x)
+                    .attr("cy", startPoint.y)
+                    .attr("r", 0);
+            }
+        });
+
+        svg.on("mousemove", function (event) {
+            if (!isSelecting) return;
+
+            // Get mouse coordinates relative to SVG
+            const svgRect = svg.node().getBoundingClientRect();
+            const currentPoint = {
+                x: event.clientX - svgRect.left,
+                y: event.clientY - svgRect.top
+            };
+
+            if (window.currentTool === "rectangle" && selectionRect) {
+                // Update selection rectangle dimensions
+                const width = currentPoint.x - startPoint.x;
+                const height = currentPoint.y - startPoint.y;
+
+                const x = width < 0 ? startPoint.x + width : startPoint.x;
+                const y = height < 0 ? startPoint.y + height : startPoint.y;
+
+                selectionRect
+                    .attr("x", x)
+                    .attr("y", y)
+                    .attr("width", Math.abs(width))
+                    .attr("height", Math.abs(height));
+            } else if (window.currentTool === "circle" && selectionCircle) {
+                // Calculate distance from start point to current point (radius)
+                const dx = currentPoint.x - startPoint.x;
+                const dy = currentPoint.y - startPoint.y;
+                const radius = Math.sqrt(dx * dx + dy * dy);
+
+                selectionCircle.attr("r", radius);
+            }
+        });
+
+        svg.on("mouseup", function () {
+            if (!isSelecting) return;
+
+            if (window.currentTool === "rectangle" && selectionRect) {
+                // Get selection rectangle boundaries
+                const rectX = parseFloat(selectionRect.attr("x"));
+                const rectY = parseFloat(selectionRect.attr("y"));
+                const rectWidth = parseFloat(selectionRect.attr("width"));
+                const rectHeight = parseFloat(selectionRect.attr("height"));
+
+                // Check which nodes are inside the selection rectangle
+                window.nodeElements.each(function (d) {
+                    const nodeX = d.x;
+                    const nodeY = d.y;
+
+                    if (nodeX >= rectX && nodeX <= rectX + rectWidth &&
+                        nodeY >= rectY && nodeY <= rectY + rectHeight) {
+                        // Select node
+                        d.selected = true;
+                        d3.select(this).classed("selected", true);
+                        d3.select(this).attr("stroke-width", 2);
+                        addToSelectionPanel(d);
+                    }
+                });
+
+                // Remove selection rectangle
+                selectionRect.remove();
+                selectionRect = null;
+            } else if (window.currentTool === "circle" && selectionCircle) {
+                // Get selection circle parameters
+                const centerX = parseFloat(selectionCircle.attr("cx"));
+                const centerY = parseFloat(selectionCircle.attr("cy"));
+                const radius = parseFloat(selectionCircle.attr("r"));
+
+                // Check which nodes are inside the selection circle
+                window.nodeElements.each(function (d) {
+                    const nodeX = d.x;
+                    const nodeY = d.y;
+
+                    // Calculate distance from circle center to node
+                    const dx = nodeX - centerX;
+                    const dy = nodeY - centerY;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+
+                    if (distance <= radius) {
+                        // Select node
+                        d.selected = true;
+                        d3.select(this).classed("selected", true);
+                        d3.select(this).attr("stroke-width", 2);
+                        addToSelectionPanel(d);
+                    }
+                });
+
+                // Remove selection circle
+                selectionCircle.remove();
+                selectionCircle = null;
+            }
+
+            isSelecting = false;
+        });
+
+        // Setup visualization control buttons
+        setupVisualizationControls();
+    }
+
+    /**
+     * Set up visualization control buttons
+     */
+    function setupVisualizationControls() {
+        const svg = d3.select("#viz-svg");
+
+        // Zoom in button
+        d3.select('.viz-control-btn[title="Zoom In"]').on('click', function () {
+            const nodes = window.visualizationNodes;
+            if (!nodes) return;
+
+            nodes.forEach(node => {
+                node.x = node.x * 1.2;
+                node.y = node.y * 1.2;
+                node.r = node.r * 1.2;
+            });
+
+            updateVisualization();
+        });
+
+        // Zoom out button
+        d3.select('.viz-control-btn[title="Zoom Out"]').on('click', function () {
+            const nodes = window.visualizationNodes;
+            if (!nodes) return;
+
+            nodes.forEach(node => {
+                node.x = node.x * 0.8;
+                node.y = node.y * 0.8;
+                node.r = node.r * 0.8;
+            });
+
+            updateVisualization();
+        });
+
+        // Reset view button
+        d3.select('.viz-control-btn[title="Reset View"]').on('click', function () {
+            initClusterVisualization();
+        });
+    }
+
+    /**
+     * Update visualization based on current node data
+     */
+    function updateVisualization() {
+        const nodeElements = window.nodeElements;
+
+        if (!nodeElements) return;
+
+        nodeElements
+            .attr("cx", d => d.x)
+            .attr("cy", d => d.y)
+            .attr("r", d => d.r);
+    }
+
+    /**
+     * Add a node to the selection panel
+     */
+    function addToSelectionPanel(node) {
+        // Check if the node is already in the selection panel
+        const existingItem = document.querySelector(`.selection-item[data-id="${node.id}"]`);
+        if (existingItem) return;
+
+        // Create HTML for new selection item
+        const selectionItem = document.createElement('div');
+        selectionItem.className = `selection-item ${node.type.toLowerCase()}`;
+        selectionItem.dataset.id = node.id;
+
+        selectionItem.innerHTML = `
+        <div class="selection-indicator"></div>
+        <div class="selection-content">
+            <div class="selection-header">
+                <div>
+                    <span class="selection-type type-${node.type.toLowerCase()}">${node.type}</span>
+                    <span class="selection-title">${node.title}</span>
+                </div>
+                <button class="remove-selection" data-id="${node.id}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="selection-meta">${node.stakeholder} • ${getCurrentDate()}</div>
+            <div class="selection-preview">${node.content}</div>
+        </div>
+    `;
+
+        // Add to selection panel
+        const selectionList = document.getElementById('selection-list');
+        selectionList.appendChild(selectionItem);
+
+        // Add event listener for removal button
+        selectionItem.querySelector('.remove-selection').addEventListener('click', function () {
+            const nodeId = this.dataset.id;
+            removeSelection(nodeId);
+        });
+
+        // Update selection count
+        updateSelectionCount();
+    }
+
+    /**
+     * Remove a node from the selection panel
+     */
+    function removeFromSelectionPanel(nodeId) {
+        const selectionItem = document.querySelector(`.selection-item[data-id="${nodeId}"]`);
+        if (selectionItem) {
+            selectionItem.remove();
+            updateSelectionCount();
+        }
+    }
+
+    /**
+     * Remove a selection both from the panel and the visualization
+     */
+    function removeSelection(nodeId) {
+        // Remove from panel
+        removeFromSelectionPanel(nodeId);
+
+        // Update node selection state in visualization
+        const nodes = window.visualizationNodes;
+        if (!nodes) return;
+
+        const nodeIndex = nodes.findIndex(n => n.id === nodeId);
+        if (nodeIndex >= 0) {
+            nodes[nodeIndex].selected = false;
+
+            // Update visualization
+            d3.select(window.nodeElements.nodes()[nodeIndex])
+                .classed("selected", false)
+                .attr("stroke-width", 1);
+        }
+    }
+
+    /**
+     * Update the selection count display
+     */
+    function updateSelectionCount() {
+        const count = document.querySelectorAll('.selection-item').length;
+        document.querySelector('.selection-count').textContent = count;
+    }
+
+    /**
+     * Set up filter buttons
+     */
+    function setupFilterButtons() {
+        // Apply filters button
+        document.querySelector('.apply-btn').addEventListener('click', function () {
+            applyFilters();
+        });
+
+        // Reset filters button
+        document.querySelector('.reset-btn').addEventListener('click', function () {
+            resetFilters();
+        });
+    }
+
+    /**
+     * Apply selected filters
+     */
+    function applyFilters() {
+        // Get filter values
+        const stakeholderFilters = {
+            Employee: document.getElementById('employee').checked,
+            Executive: document.getElementById('executive').checked,
+            Board: document.getElementById('board').checked,
+            Partner: document.getElementById('partner').checked
+        };
+
+        const componentFilters = {
+            VIBED: document.getElementById('vibed').checked,
+            ECHOS: document.getElementById('echos').checked,
+            SPOKE: document.getElementById('spoke').checked,
+            P5: document.getElementById('p5').checked,
+            DOTES: document.getElementById('dotes').checked
+        };
+
+        // Apply filters to visualization
+        window.nodeElements.style('opacity', function (d) {
+            const stakeholderVisible = stakeholderFilters[d.stakeholder];
+            const componentVisible = componentFilters[d.type];
+
+            return (stakeholderVisible && componentVisible) ? 1 : 0.2;
+        });
+    }
+
+    /**
+     * Reset filters to default
+     */
+    function resetFilters() {
+        // Reset checkboxes
+        document.querySelectorAll('.checkbox-item input').forEach(checkbox => {
+            checkbox.checked = true;
+        });
+
+        // Reset visualization
+        window.nodeElements.style('opacity', 1);
+    }
+
+    /**
+     * Set up selection actions
+     */
+    function setupSelectionActions() {
+        // Analyze selection button
+        document.querySelector('.analyze-btn').addEventListener('click', function () {
+            // Simulate navigation to analysis screen
+            alert('Navigating to Analysis Screen with the selected elements');
+        });
+
+        // Clear all button
+        document.querySelector('.clear-btn').addEventListener('click', function () {
+            clearAllSelections();
+        });
+
+        // Setup remove buttons for initial selection items
+                document.querySelectorAll('.remove-selection').forEach(button => {
+                    button.addEventListener('click', function () {
+                        const selectionItem = this.closest('.selection-item');
+                        selectionItem.remove();
+                        updateSelectionCount();
+                    });
+                });
+            }
+
+            /**
+             * Clear all selections
+             */
+            function clearAllSelections() {
+                // Clear selection panel
+                document.getElementById('selection-list').innerHTML = '';
+
+                // Update count
+                updateSelectionCount();
+
+                // Update visualization
+                const nodes = window.visualizationNodes;
+                if (!nodes) return;
+
+                nodes.forEach(node => {
+                    node.selected = false;
+                });
+
+                window.nodeElements
+                    .classed("selected", false)
+                    .attr("stroke-width", 1);
+            }
+
+            /**
+             * Get current date in format "Jan 15, 2023"
+             */
+            function getCurrentDate() {
+                const now = new Date();
+                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                return `${months[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+            }
+
+            /**
+             * Pan functionality for the visualization (when pan tool is selected)
+             * This would be implemented with d3.zoom() in a full implementation
+             */
+            function setupPanFunctionality() {
+                // This would be a more complex implementation with d3.zoom()
+                // For the mockup, we're just providing the UI elements
+            }
+
+
+    </script>
+</body>
+
+</html>
