@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit User Account</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        .form-card {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .form-card:hover {
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .input-field {
+            transition: border-color 0.2s ease;
+        }
+        
+        .input-field:focus {
+            border-color: #4F46E5;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+        
+        .btn-primary {
+            background-color: #4F46E5;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: #4338CA;
+            transform: translateY(-1px);
+        }
+        
+        .btn-secondary {
+            transition: all 0.2s ease;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #E5E7EB;
+            transform: translateY(-1px);
+        }
+        
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .status-active {
+            background-color: #DEF7EC;
+            color: #03543E;
+        }
+        
+        .status-inactive {
+            background-color: #FDE8E8;
+            color: #9B1C1C;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen flex items-center justify-center p-4">
+    <div class="w-full max-w-3xl">
+        <!-- Header with user information -->
+        <div class="mb-8">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">Edit User Account</h1>
+                    <p class="text-gray-600 mt-1">Sarah Johnson (sarah.johnson@example.com)</p>
+                </div>
+                <div class="mt-4 md:mt-0 flex items-center">
+                    <span class="status-badge status-active mr-4">
+                        <span class="h-2 w-2 rounded-full bg-green-600 mr-2"></span>
+                        Active
+                    </span>
+                    <span class="text-sm text-gray-500">Last updated: Mar 15, 2025</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Form Card -->
+        <div class="bg-white rounded-lg p-8 form-card">
+            <form id="editUserForm">
+                <!-- Form Sections -->
+                <div class="space-y-8">
+                    <!-- Account Information Section -->
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">Account Information</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="md:col-span-2">
+                                <label for="email" class="block text-sm font-medium text-gray-700 mb-1">Username/Email</label>
+                                <input type="email" id="email" name="email" required 
+                                    class="w-full px-4 py-2 rounded-md border border-gray-300 input-field focus:outline-none"
+                                    value="sarah.johnson@example.com">
+                            </div>
+                            <div>
+                                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">New Password</label>
+                                <input type="password" id="password" name="password"
+                                    class="w-full px-4 py-2 rounded-md border border-gray-300 input-field focus:outline-none"
+                                    placeholder="Leave blank to keep current password">
+                            </div>
+                            <div>
+                                <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-1">Confirm New Password</label>
+                                <input type="password" id="confirmPassword" name="confirmPassword"
+                                    class="w-full px-4 py-2 rounded-md border border-gray-300 input-field focus:outline-none"
+                                    placeholder="Leave blank to keep current password">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- User Profile Section -->
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">User Profile</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="firstName" class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                                <input type="text" id="firstName" name="firstName" required 
+                                    class="w-full px-4 py-2 rounded-md border border-gray-300 input-field focus:outline-none"
+                                    value="Sarah">
+                            </div>
+                            <div>
+                                <label for="lastName" class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                                <input type="text" id="lastName" name="lastName" required 
+                                    class="w-full px-4 py-2 rounded-md border border-gray-300 input-field focus:outline-none"
+                                    value="Johnson">
+                            </div>
+                            <div>
+                                <label for="phone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                                <input type="tel" id="phone" name="phone"
+                                    class="w-full px-4 py-2 rounded-md border border-gray-300 input-field focus:outline-none"
+                                    value="(555) 123-4567">
+                            </div>
+                            <div>
+                                <label for="lastLogin" class="block text-sm font-medium text-gray-700 mb-1">Last Login</label>
+                                <input type="text" id="lastLogin" name="lastLogin" disabled
+                                    class="w-full px-4 py-2 rounded-md border border-gray-300 bg-gray-50 text-gray-500"
+                                    value="Mar 28, 2025 09:43 AM">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Organization Section -->
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">Organization</h2>
+                        <div class="grid grid-cols-1 gap-6">
+                            <div>
+                                <label for="clientId" class="block text-sm font-medium text-gray-700 mb-1">Client/Organization</label>
+                                <select id="clientId" name="clientId" required
+                                    class="w-full px-4 py-2 rounded-md border border-gray-300 input-field focus:outline-none">
+                                    <option value="1">Organization Alpha</option>
+                                    <option value="2" selected>Organization Beta</option>
+                                    <option value="3">Organization Gamma</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="orgUnit" class="block text-sm font-medium text-gray-700 mb-1">Organizational Unit</label>
+                                <select id="orgUnit" name="orgUnit"
+                                    class="w-full px-4 py-2 rounded-md border border-gray-300 input-field focus:outline-none">
+                                    <option value="1">Sales</option>
+                                    <option value="2" selected>Marketing</option>
+                                    <option value="3">Engineering</option>
+                                    <option value="4">Finance</option>
+                                    <option value="5">Human Resources</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Roles and Permissions -->
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">Roles & Permissions</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Roles</label>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="role1" name="roles" value="1" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                        <label for="role1" class="ml-2 block text-sm text-gray-700">Client Administrator</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="role2" name="roles" value="2" checked class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                        <label for="role2" class="ml-2 block text-sm text-gray-700">Standard User</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="role3" name="roles" value="3" checked class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                        <label for="role3" class="ml-2 block text-sm text-gray-700">Report Viewer</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="role4" name="roles" value="4" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                        <label for="role4" class="ml-2 block text-sm text-gray-700">Data Entry</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Application Modules</label>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="app1" name="apps" value="1" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                        <label for="app1" class="ml-2 block text-sm text-gray-700">Financial Planning Module</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="app2" name="apps" value="2" checked class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                        <label for="app2" class="ml-2 block text-sm text-gray-700">Relationship Management Module</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="app3" name="apps" value="3" checked class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                        <label for="app3" class="ml-2 block text-sm text-gray-700">Metrics Module</label>
+                                    </div>
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="app4" name="apps" value="4" checked class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                        <label for="app4" class="ml-2 block text-sm text-gray-700">Compass Module</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Additional Settings -->
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">Additional Settings</h2>
+                        <div class="space-y-4">
+                            <div class="flex items-center">
+                                <input type="checkbox" id="enabled" name="enabled" checked class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                <label for="enabled" class="ml-2 block text-sm text-gray-700">Account Enabled</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="isInternal" name="isInternal" checked class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                <label for="isInternal" class="ml-2 block text-sm text-gray-700">Internal User</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="sendWelcomeEmail" name="sendWelcomeEmail" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                <label for="sendWelcomeEmail" class="ml-2 block text-sm text-gray-700">Send welcome email to user</label>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="checkbox" id="requirePasswordChange" name="requirePasswordChange" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                <label for="requirePasswordChange" class="ml-2 block text-sm text-gray-700">Require password change on next login</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Activity Log Section -->
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">Activity Log</h2>
+                        <div class="space-y-3">
+                            <div class="bg-gray-50 p-3 rounded text-sm">
+                                <div class="flex justify-between">
+                                    <span class="font-medium">Account created</span>
+                                    <span class="text-gray-500">Jan 12, 2025</span>
+                                </div>
+                                <p class="text-gray-600 mt-1">Created by admin@example.com</p>
+                            </div>
+                            <div class="bg-gray-50 p-3 rounded text-sm">
+                                <div class="flex justify-between">
+                                    <span class="font-medium">Role updated</span>
+                                    <span class="text-gray-500">Feb 23, 2025</span>
+                                </div>
+                                <p class="text-gray-600 mt-1">Added "Report Viewer" role by admin@example.com</p>
+                            </div>
+                            <div class="bg-gray-50 p-3 rounded text-sm">
+                                <div class="flex justify-between">
+                                    <span class="font-medium">Password reset</span>
+                                    <span class="text-gray-500">Mar 15, 2025</span>
+                                </div>
+                                <p class="text-gray-600 mt-1">Password reset by sarah.johnson@example.com</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Form Actions -->
+                <div class="mt-10 pt-6 border-t border-gray-200 flex flex-wrap justify-between">
+                    <div class="mb-4 sm:mb-0">
+                        <button type="button" class="px-4 py-2 rounded-md text-white bg-red-600 hover:bg-red-700 transition-colors">
+                            Deactivate Account
+                        </button>
+                    </div>
+                    <div class="space-x-4">
+                        <button type="button" class="px-6 py-2 rounded-md text-gray-700 bg-gray-100 btn-secondary">
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-6 py-2 rounded-md text-white btn-primary">
+                            Save Changes
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Footer Info -->
+        <div class="mt-6 text-center text-sm text-gray-500">
+            <p>Last updated by admin@example.com on March 15, 2025 at 11:42 AM</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('editUserForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Here you would normally collect form data and submit to your backend
+            const formData = new FormData(this);
+            const formValues = Object.fromEntries(formData.entries());
+            
+            // Get checkbox values properly (they need special handling since they're multi-select)
+            formValues.roles = Array.from(document.querySelectorAll('input[name="roles"]:checked')).map(el => el.value);
+            formValues.apps = Array.from(document.querySelectorAll('input[name="apps"]:checked')).map(el => el.value);
+            
+            // For demo purposes, show collected data
+            console.log('Form values to be submitted:', formValues);
+            
+            // Validation example
+            if (formValues.password && formValues.password !== formValues.confirmPassword) {
+                alert('Passwords do not match!');
+                return;
+            }
+            
+            // Show success message (in a real implementation, you'd submit to server)
+            alert('User account updated successfully!');
+        });
+    </script>
+</body>
+</html>
