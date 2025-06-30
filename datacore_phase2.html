@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataCore Generation - Processing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8fafc;
+            color: #334155;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #3b82f6;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+
+        .progress-bar {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-steps {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.75rem;
+            font-weight: 600;
+        }
+
+        .step.active .step-number {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .step.completed .step-number {
+            background: #10b981;
+            color: white;
+        }
+
+        .step.inactive .step-number {
+            background: #e2e8f0;
+            color: #64748b;
+        }
+
+        .step-connector {
+            flex: 1;
+            height: 2px;
+            background: #e2e8f0;
+            margin: 0 1rem;
+        }
+
+        .step-connector.completed {
+            background: #10b981;
+        }
+
+        .processing-overview {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .overall-progress {
+            margin-bottom: 2rem;
+        }
+
+        .overall-progress h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e2e8f0;
+            border-top: 2px solid #3b82f6;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-right: 0.75rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .progress-track {
+            background: #f1f5f9;
+            border-radius: 8px;
+            height: 12px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #3b82f6, #1d4ed8);
+            height: 100%;
+            border-radius: 8px;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .component-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .component-card.processing {
+            border-color: #3b82f6;
+            background: linear-gradient(135deg, #eff6ff 0%, white 100%);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+        }
+
+        .component-card.completed {
+            border-color: #10b981;
+            background: linear-gradient(135deg, #ecfdf5 0%, white 100%);
+        }
+
+        .component-card.pending {
+            opacity: 0.6;
+        }
+
+        .component-header {
+            display: flex;
+            align-items: center;
+            justify-content: between;
+            margin-bottom: 1rem;
+        }
+
+        .component-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .component-description {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-bottom: 1rem;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .status-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 0.5rem;
+        }
+
+        .status-text {
+            font-weight: 500;
+        }
+
+        .status-processing {
+            color: #3b82f6;
+        }
+
+        .status-completed {
+            color: #10b981;
+        }
+
+        .status-pending {
+            color: #64748b;
+        }
+
+        .component-progress {
+            background: #f1f5f9;
+            border-radius: 6px;
+            height: 8px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .component-progress-fill {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.5s ease;
+        }
+
+        .component-progress-fill.processing {
+            background: #3b82f6;
+        }
+
+        .component-progress-fill.completed {
+            background: #10b981;
+        }
+
+        .component-details {
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.25rem;
+        }
+
+        .confidence-score {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background: #f8fafc;
+            border-radius: 6px;
+            border-left: 3px solid #10b981;
+        }
+
+        .confidence-score.hidden {
+            display: none;
+        }
+
+        .notifications {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .notifications h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 1rem;
+        }
+
+        .notification {
+            display: flex;
+            align-items: flex-start;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid;
+        }
+
+        .notification:last-child {
+            margin-bottom: 0;
+        }
+
+        .notification.info {
+            background: #eff6ff;
+            border-color: #3b82f6;
+        }
+
+        .notification.success {
+            background: #ecfdf5;
+            border-color: #10b981;
+        }
+
+        .notification.warning {
+            background: #fffbeb;
+            border-color: #f59e0b;
+        }
+
+        .notification-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 0.75rem;
+            margin-top: 0.125rem;
+            flex-shrink: 0;
+        }
+
+        .notification-content {
+            flex: 1;
+        }
+
+        .notification-title {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .notification-message {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .notification-time {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin-top: 0.25rem;
+        }
+
+        .actions {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            margin: 0 0.5rem;
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .component-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>DataCore Generation in Progress</h1>
+            <p>Your comprehensive DataCore is being generated using advanced language models</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div class="progress-steps">
+                <div class="step completed">
+                    <div class="step-number">✓</div>
+                    <span>Setup & Selection</span>
+                </div>
+                <div class="step-connector completed"></div>
+                <div class="step active">
+                    <div class="step-number">2</div>
+                    <span>LLM Processing</span>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step inactive">
+                    <div class="step-number">3</div>
+                    <span>Review & Refine</span>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step inactive">
+                    <div class="step-number">4</div>
+                    <span>Finalize & Publish</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Processing Overview -->
+        <div class="processing-overview">
+            <div class="overall-progress">
+                <h2>
+                    <div class="spinner"></div>
+                    Overall Progress
+                </h2>
+                <div class="progress-track">
+                    <div class="progress-fill" style="width: 60%"></div>
+                </div>
+                <div class="progress-stats">
+                    <span>Processing SPOKE component...</span>
+                    <span>60% Complete (Est. 6 minutes remaining)</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Component Processing Cards -->
+        <div class="component-grid">
+            <!-- VIBED Card -->
+            <div class="component-card completed">
+                <div class="component-header">
+                    <div>
+                        <div class="component-name">VIBED</div>
+                        <div class="component-description">Values, Identity, Beliefs, Essence, Dynamics</div>
+                    </div>
+                </div>
+                <div class="status-indicator">
+                    <svg class="status-icon status-completed" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="status-text status-completed">Completed</span>
+                </div>
+                <div class="component-progress">
+                    <div class="component-progress-fill completed" style="width: 100%"></div>
+                </div>
+                <div class="component-details">
+                    <div class="detail-row">
+                        <span>Sources processed:</span>
+                        <span>4 questionnaires + 5 documents</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Processing time:</span>
+                        <span>3m 42s</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Completion:</span>
+                        <span>2:34 PM</span>
+                    </div>
+                </div>
+                <div class="confidence-score">
+                    <strong>Confidence Score: 94%</strong><br>
+                    <small>High confidence - comprehensive data available</small>
+                </div>
+            </div>
+
+            <!-- ECHOS Card -->
+            <div class="component-card completed">
+                <div class="component-header">
+                    <div>
+                        <div class="component-name">ECHOS</div>
+                        <div class="component-description">Enterprise, Collaborations, Hostilities, Orbit, Situation</div>
+                    </div>
+                </div>
+                <div class="status-indicator">
+                    <svg class="status-icon status-completed" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="status-text status-completed">Completed</span>
+                </div>
+                <div class="component-progress">
+                    <div class="component-progress-fill completed" style="width: 100%"></div>
+                </div>
+                <div class="component-details">
+                    <div class="detail-row">
+                        <span>Sources processed:</span>
+                        <span>3 questionnaires + 5 documents + VIBED</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Processing time:</span>
+                        <span>4m 18s</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Completion:</span>
+                        <span>2:38 PM</span>
+                    </div>
+                </div>
+                <div class="confidence-score">
+                    <strong>Confidence Score: 87%</strong><br>
+                    <small>Good confidence - some areas may need review</small>
+                </div>
+            </div>
+
+            <!-- SPOKE Card (Currently Processing) -->
+            <div class="component-card processing">
+                <div class="component-header">
+                    <div>
+                        <div class="component-name">SPOKE</div>
+                        <div class="component-description">Services, Products, Outcomes, Knowledge, Experience</div>
+                    </div>
+                </div>
+                <div class="status-indicator">
+                    <div class="spinner" style="width: 20px; height: 20px; margin-right: 0.5rem;"></div>
+                    <span class="status-text status-processing">Processing...</span>
+                </div>
+                <div class="component-progress">
+                    <div class="component-progress-fill processing" style="width: 75%"></div>
+                </div>
+                <div class="component-details">
+                    <div class="detail-row">
+                        <span>Sources processing:</span>
+                        <span>1 questionnaire + 5 documents + VIBED + ECHOS</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Current step:</span>
+                        <span>Generating Experience responses</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Elapsed time:</span>
+                        <span>2m 56s</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- P5 Card (Pending) -->
+            <div class="component-card pending">
+                <div class="component-header">
+                    <div>
+                        <div class="component-name">P5</div>
+                        <div class="component-description">Power, Process, People, Platforms, Progress</div>
+                    </div>
+                </div>
+                <div class="status-indicator">
+                    <svg class="status-icon status-pending" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                    </svg>
+                    <span class="status-text status-pending">Waiting in queue</span>
+                </div>
+                <div class="component-progress">
+                    <div class="component-progress-fill" style="width: 0%"></div>
+                </div>
+                <div class="component-details">
+                    <div class="detail-row">
+                        <span>Sources ready:</span>
+                        <span>2 questionnaires + 5 documents + previous components</span>
+                    </div>
+                    <div class="detail-row">
+                        <span>Estimated start:</span>
+                        <span>In 3-4 minutes</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications -->
+        <div class="notifications">
+            <h3>Processing Updates</h3>
+            
+            <div class="notification success">
+                <svg class="notification-icon" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+                <div class="notification-content">
+                    <div class="notification-title">ECHOS component completed successfully</div>
+                    <div class="notification-message">Generated comprehensive responses for all 5 sub-components with 87% confidence score</div>
+                    <div class="notification-time">2:38 PM</div>
+                </div>
+            </div>
+
+            <div class="notification info">
+                <svg class="notification-icon" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                </svg>
+                <div class="notification-content">
+                    <div class="notification-title">DataCore generation started</div>
+                    <div class="notification-message">Processing 10 questionnaire responses and 5 organizational documents across all components</div>
+                    <div class="notification-time">2:30 PM</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="actions">
+            <p style="margin-bottom: 1.5rem; color: #64748b;">Processing is ongoing. You can pause the generation or continue monitoring progress.</p>
+            <button class="btn btn-secondary">Pause Generation</button>
+            <button class="btn btn-secondary" disabled>Cancel Process</button>
+        </div>
+    </div>
+
+    <script>
+        // Simulate real-time updates
+        let spokeProgress = 75;
+        let overallProgress = 60;
+        
+        function updateProgress() {
+            if (spokeProgress < 100) {
+                spokeProgress += Math.random() * 5;
+                overallProgress += Math.random() * 2;
+                
+                if (spokeProgress > 100) spokeProgress = 100;
+                if (overallProgress > 75) overallProgress = 75;
+                
+                // Update SPOKE progress
+                document.querySelector('.component-card.processing .component-progress-fill').style.width = spokeProgress + '%';
+                
+                // Update overall progress
+                document.querySelector('.progress-fill').style.width = overallProgress + '%';
+                
+                // Update time remaining
+                const timeRemaining = Math.max(1, Math.ceil((100 - overallProgress) / 10));
+                document.querySelector('.progress-stats span:last-child').textContent = 
+                    `${Math.round(overallProgress)}% Complete (Est. ${timeRemaining} minutes remaining)`;
+            } else {
+                // SPOKE completed - transition to P5
+                completeSPOKE();
+                clearInterval(progressInterval);
+                setTimeout(startP5, 2000);
+            }
+        }
+        
+        function completeSPOKE() {
+            const spokeCard = document.querySelector('.component-card.processing');
+            spokeCard.className = 'component-card completed';
+            spokeCard.querySelector('.status-indicator').innerHTML = `
+                <svg class="status-icon status-completed" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+                <span class="status-text status-completed">Completed</span>
+            `;
+            
+            // Add completion details
+            spokeCard.querySelector('.component-details').innerHTML = `
+                <div class="detail-row">
+                    <span>Sources processed:</span>
+                    <span>1 questionnaire + 5 documents + VIBED + ECHOS</span>
+                </div>
+                <div class="detail-row">
+                    <span>Processing time:</span>
+                    <span>4m 12s</span>
+                </div>
+                <div class="detail-row">
+                    <span>Completion:</span>
+                    <span>2:43 PM</span>
+                </div>
+            `;
+            
+            // Add confidence score
+            spokeCard.innerHTML += `
+                <div class="confidence-score">
+                    <strong>Confidence Score: 78%</strong><br>
+                    <small>Moderate confidence - limited source data</small>
+                </div>
+            `;
+        }
+        
+        function startP5() {
+            const p5Card = document.querySelector('.component-card.pending');
+            p5Card.className = 'component-card processing';
+            p5Card.querySelector('.status-indicator').innerHTML = `
+                <div class="spinner" style="width: 20px; height: 20px; margin-right: 0.5rem;"></div>
+                <span class="status-text status-processing">Processing...</span>
+            `;
+            
+            document.querySelector('.progress-stats span:first-child').textContent = 'Processing P5 component...';
+            
+            // Update overall progress
+            overallProgress = 75;
+            document.querySelector('.progress-fill').style.width = overallProgress + '%';
+        }
+        
+        // Start the simulation
+        const progressInterval = setInterval(updateProgress, 2000);
+        
+        // Button handlers
+        document.querySelector('.btn-secondary').addEventListener('click', function() {
+            if (this.textContent === 'Pause Generation') {
+                clearInterval(progressInterval);
+                this.textContent = 'Resume Generation';
+                this.style.background = '#fbbf24';
+                this.style.color = 'white';
+            } else {
+                // Resume would restart the interval
+                this.textContent = 'Pause Generation';
+                this.style.background = '';
+                this.style.color = '';
+            }
+        });
+    </script>
+</body>
+</html>

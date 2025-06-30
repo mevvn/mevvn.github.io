@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataCore Review & Refinement</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8fafc;
+            color: #334155;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #3b82f6;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+
+        .progress-bar {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-steps {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.75rem;
+            font-weight: 600;
+        }
+
+        .step.active .step-number {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .step.completed .step-number {
+            background: #10b981;
+            color: white;
+        }
+
+        .step.inactive .step-number {
+            background: #e2e8f0;
+            color: #64748b;
+        }
+
+        .step-connector {
+            flex: 1;
+            height: 2px;
+            background: #e2e8f0;
+            margin: 0 1rem;
+        }
+
+        .step-connector.completed {
+            background: #10b981;
+        }
+
+        .review-progress {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .review-progress h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .progress-card {
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            background: #f8fafc;
+            transition: all 0.3s ease;
+        }
+
+        .progress-card.reviewed {
+            border-color: #10b981;
+            background: #ecfdf5;
+        }
+
+        .progress-card-title {
+            font-weight: 600;
+            color: #64748b;
+            margin-bottom: 0.25rem;
+        }
+
+        .progress-card.reviewed .progress-card-title {
+            color: #065f46;
+        }
+
+        .progress-card-status {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .progress-card.reviewed .progress-card-status {
+            color: #064e3b;
+        }
+
+        .progress-alert {
+            background: #fffbeb;
+            border: 1px solid #f59e0b;
+            border-radius: 8px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .progress-alert.success {
+            background: #ecfdf5;
+            border-color: #10b981;
+        }
+
+        .alert-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 0.75rem;
+        }
+
+        .alert-text {
+            color: #92400e;
+        }
+
+        .progress-alert.success .alert-text {
+            color: #065f46;
+        }
+
+        .main-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .sidebar {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+            position: sticky;
+            top: 2rem;
+        }
+
+        .sidebar h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 1rem;
+        }
+
+        .component-nav {
+            list-style: none;
+        }
+
+        .component-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .component-nav button {
+            width: 100%;
+            text-align: left;
+            padding: 0.75rem 1rem;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .component-nav button:hover {
+            background: #f1f5f9;
+        }
+
+        .component-nav button.active {
+            background: #eff6ff;
+            color: #3b82f6;
+            font-weight: 500;
+        }
+
+        .confidence-badge {
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .confidence-high {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .confidence-medium {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .confidence-low {
+            background: #fecaca;
+            color: #991b1b;
+        }
+
+        .content-area {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .content-header {
+            padding: 2rem 2rem 1rem 2rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .content-header h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .content-header p {
+            color: #64748b;
+            margin-bottom: 1rem;
+        }
+
+        .content-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .meta-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 0.5rem;
+        }
+
+        .content-body {
+            padding: 2rem;
+        }
+
+        .question-section {
+            margin-bottom: 2rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .question-header {
+            background: #f8fafc;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .question-title {
+            font-weight: 500;
+            color: #1e293b;
+            flex: 1;
+        }
+
+        .question-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-icon {
+            padding: 0.25rem;
+            border: none;
+            background: transparent;
+            border-radius: 4px;
+            cursor: pointer;
+            color: #64748b;
+            transition: all 0.2s;
+        }
+
+        .btn-icon:hover {
+            background: #e2e8f0;
+            color: #1e293b;
+        }
+
+        .question-content {
+            padding: 1.5rem;
+        }
+
+        .generated-response {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .response-label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #64748b;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .ai-badge {
+            background: #3b82f6;
+            color: white;
+            padding: 0.125rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            margin-left: 0.5rem;
+        }
+
+        .textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            resize: vertical;
+            transition: border-color 0.2s;
+        }
+
+        .textarea:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .source-info {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background: #f1f5f9;
+            border-radius: 6px;
+            font-size: 0.85rem;
+        }
+
+        .source-label {
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.25rem;
+        }
+
+        .source-list {
+            color: #64748b;
+            list-style: none;
+        }
+
+        .source-list li {
+            margin-bottom: 0.125rem;
+        }
+
+        .actions-bar {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: #2563eb;
+        }
+
+        .btn-primary:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .save-indicator {
+            display: flex;
+            align-items: center;
+            color: #10b981;
+            font-size: 0.9rem;
+        }
+
+        .save-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 0.5rem;
+        }
+
+        .warning-alert {
+            background: #fffbeb;
+            border: 1px solid #f59e0b;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .warning-icon {
+            width: 20px;
+            height: 20px;
+            color: #d97706;
+            margin-right: 0.75rem;
+        }
+
+        @media (max-width: 1024px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                position: static;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Review & Refine Your DataCore</h1>
+            <p>Review AI-generated responses and make any necessary adjustments before finalizing</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div class="progress-steps">
+                <div class="step completed">
+                    <div class="step-number">✓</div>
+                    <span>Setup & Selection</span>
+                </div>
+                <div class="step-connector completed"></div>
+                <div class="step completed">
+                    <div class="step-number">✓</div>
+                    <span>LLM Processing</span>
+                </div>
+                <div class="step-connector completed"></div>
+                <div class="step active">
+                    <div class="step-number">3</div>
+                    <span>Review & Refine</span>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step inactive">
+                    <div class="step-number">4</div>
+                    <span>Finalize & Publish</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Review Progress Summary -->
+        <div class="review-progress">
+            <h3>Review Progress</h3>
+            <div class="progress-grid">
+                <div class="progress-card reviewed" data-component="VIBED">
+                    <div class="progress-card-title">VIBED</div>
+                    <div class="progress-card-status">✓ Reviewed & Updated</div>
+                </div>
+                <div class="progress-card" data-component="ECHOS">
+                    <div class="progress-card-title">ECHOS</div>
+                    <div class="progress-card-status">Pending Review</div>
+                </div>
+                <div class="progress-card" data-component="SPOKE">
+                    <div class="progress-card-title">SPOKE</div>
+                    <div class="progress-card-status">Pending Review</div>
+                </div>
+                <div class="progress-card" data-component="P5">
+                    <div class="progress-card-title">P5</div>
+                    <div class="progress-card-status">Pending Review</div>
+                </div>
+            </div>
+            <div class="progress-alert">
+                <svg class="alert-icon" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                </svg>
+                <span class="alert-text">3 components remaining to review before proceeding to finalization.</span>
+            </div>
+        </div>
+
+        <!-- Main Layout -->
+        <div class="main-layout">
+            <!-- Sidebar Navigation -->
+            <div class="sidebar">
+                <h3>Components</h3>
+                <ul class="component-nav">
+                    <li>
+                        <button class="active" data-component="VIBED">
+                            VIBED
+                            <span class="confidence-badge confidence-high">94%</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button data-component="ECHOS">
+                            ECHOS
+                            <span class="confidence-badge confidence-medium">87%</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button data-component="SPOKE">
+                            SPOKE
+                            <span class="confidence-badge confidence-medium">78%</span>
+                        </button>
+                    </li>
+                    <li>
+                        <button data-component="P5">
+                            P5
+                            <span class="confidence-badge confidence-high">91%</span>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Content Header -->
+                <div class="content-header">
+                    <h2>VIBED - Values, Identity, Beliefs, Essence, Dynamics</h2>
+                    <p>Foundational principles and identity that anchor your organization</p>
+                    
+                    <div class="content-meta">
+                        <div class="meta-item">
+                            <svg class="meta-icon" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span>94% Confidence Score</span>
+                        </div>
+                        <div class="meta-item">
+                            <svg class="meta-icon" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/>
+                            </svg>
+                            <span>4 Source Questionnaires</span>
+                        </div>
+                        <div class="meta-item">
+                            <svg class="meta-icon" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                            </svg>
+                            <span>5 Documents Processed</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Body -->
+                <div class="content-body">
+                    <div class="warning-alert">
+                        <svg class="warning-icon" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>Please review all AI-generated content carefully. These are initial drafts that should be refined to match your organization's voice and ensure accuracy.</span>
+                    </div>
+
+                    <!-- Question 1 -->
+                    <div class="question-section">
+                        <div class="question-header">
+                            
+                            <div class="source-info">
+                                <div class="source-label">Generated from sources:</div>
+                                <ul class="source-list">
+                                    <li>• VIBED - Staff Culture Survey (Emma Rodriguez)</li>
+                                    <li>• 2023 Annual Report</li>
+                                    <li>• Board Meeting Minutes - Q1 2024</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Question 3 -->
+                    <div class="question-section">
+                        <div class="question-header">
+                            <div class="question-title">How do your values align with stakeholder expectations and societal needs?</div>
+                            <div class="question-actions">
+                                <button class="btn-icon" title="Reset to original">
+                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/>
+                                    </svg>
+                                </button>
+                                <button class="btn-icon" title="Regenerate response">
+                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="question-content">
+                            <div class="generated-response">
+                                <div class="response-label">
+                                    AI-Generated Response
+                                    <span class="ai-badge">AI</span>
+                                </div>
+                                <textarea class="textarea">Our values directly address critical societal challenges in education equity and digital accessibility. Stakeholder feedback consistently validates our approach: educators appreciate our focus on practical, classroom-ready solutions; students value the inclusive design that accommodates diverse learning needs; community leaders recognize our commitment to sustainable, long-term partnerships rather than short-term interventions.
+
+The alignment is particularly strong in addressing the digital divide, where our Inclusive Excellence principle meets the urgent societal need for equitable technology access. Our Innovation with Purpose resonates with funders who seek measurable community impact, while our Sustainable Impact approach addresses growing concerns about the environmental and social responsibility of technology organizations. Regular stakeholder surveys indicate 89% alignment between our stated values and perceived organizational behavior, with the strongest alignment in our commitment to community partnership and collaborative decision-making.</textarea>
+                            </div>
+                            
+                            <div class="source-info">
+                                <div class="source-label">Generated from sources:</div>
+                                <ul class="source-list">
+                                    <li>• VIBED - Executive Leadership Survey (Sarah Johnson)</li>
+                                    <li>• 2023 Annual Report</li>
+                                    <li>• Strategic Plan 2024-2027</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions Bar -->
+        <div class="actions-bar">
+            <div class="save-indicator">
+                <svg class="save-icon" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+                <span>All changes saved</span>
+            </div>
+            
+            <div style="display: flex; gap: 1rem;">
+                <button class="btn btn-secondary">Save as Draft</button>
+                <button class="btn btn-success" id="markReviewedBtn">Mark VIBED as Reviewed ✓</button>
+                <button class="btn btn-primary" id="finalizeBtn" disabled>Complete Review & Finalize</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Component review tracking
+        let reviewedComponents = new Set(['VIBED']); // VIBED starts as reviewed
+        const totalComponents = ['VIBED', 'ECHOS', 'SPOKE', 'P5'];
+        let currentComponent = 'VIBED';
+
+        function markComponentReviewed() {
+            reviewedComponents.add(currentComponent);
+            updateReviewProgress();
+            updateMarkButton();
+            checkAllReviewed();
+        }
+
+        function updateReviewProgress() {
+            totalComponents.forEach(component => {
+                const card = document.querySelector(`[data-component="${component}"]`);
+                const statusDiv = card.querySelector('.progress-card-status');
+                
+                if (reviewedComponents.has(component)) {
+                    card.classList.add('reviewed');
+                    statusDiv.textContent = '✓ Reviewed & Updated';
+                } else {
+                    card.classList.remove('reviewed');
+                    statusDiv.textContent = 'Pending Review';
+                }
+            });
+        }
+
+        function updateMarkButton() {
+            const markBtn = document.getElementById('markReviewedBtn');
+            
+            if (reviewedComponents.has(currentComponent)) {
+                markBtn.textContent = `Mark ${currentComponent} as Reviewed ✓`;
+                markBtn.classList.remove('btn-secondary');
+                markBtn.classList.add('btn-success');
+                markBtn.disabled = true;
+            } else {
+                markBtn.textContent = `Mark ${currentComponent} as Reviewed`;
+                markBtn.classList.remove('btn-success');
+                markBtn.classList.add('btn-secondary');
+                markBtn.disabled = false;
+            }
+        }
+
+        function checkAllReviewed() {
+            const finalizeBtn = document.getElementById('finalizeBtn');
+            const alertDiv = document.querySelector('.progress-alert');
+            const alertText = alertDiv.querySelector('.alert-text');
+            const alertIcon = alertDiv.querySelector('.alert-icon');
+            
+            if (reviewedComponents.size === totalComponents.length) {
+                finalizeBtn.disabled = false;
+                alertDiv.classList.add('success');
+                alertText.textContent = 'All components reviewed! Ready to proceed to finalization.';
+                alertIcon.innerHTML = `<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>`;
+            } else {
+                const remaining = totalComponents.length - reviewedComponents.size;
+                alertDiv.classList.remove('success');
+                alertText.textContent = `${remaining} component${remaining > 1 ? 's' : ''} remaining to review before proceeding to finalization.`;
+                alertIcon.innerHTML = `<path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>`;
+            }
+        }
+
+        function updateContentArea(componentName) {
+            const contentHeader = document.querySelector('.content-header h2');
+            const descriptions = {
+                'VIBED': 'Values, Identity, Beliefs, Essence, Dynamics - Foundational principles and identity that anchor your organization',
+                'ECHOS': 'Enterprise, Collaborations, Hostilities, Orbit, Situation - Understanding and engaging with external ecosystems',
+                'SPOKE': 'Services, Products, Outcomes, Knowledge, Experience - Building dynamic connections between internal and external contexts',
+                'P5': 'Power, Process, People, Platforms, Progress - Driving operational excellence through strategic implementation'
+            };
+            
+            contentHeader.textContent = `${componentName} - ${descriptions[componentName].split(' - ')[0]}`;
+            document.querySelector('.content-header p').textContent = descriptions[componentName].split(' - ')[1];
+        }
+
+        // Component navigation
+        document.querySelectorAll('.component-nav button').forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons
+                document.querySelectorAll('.component-nav button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                // Update current component
+                currentComponent = this.getAttribute('data-component');
+                updateContentArea(currentComponent);
+                updateMarkButton();
+            });
+        });
+
+        // Mark reviewed button
+        document.getElementById('markReviewedBtn').addEventListener('click', markComponentReviewed);
+
+        // Auto-save functionality
+        let saveTimeout;
+        document.querySelectorAll('.textarea').forEach(textarea => {
+            textarea.addEventListener('input', function() {
+                clearTimeout(saveTimeout);
+                const saveIndicator = document.querySelector('.save-indicator span');
+                saveIndicator.textContent = 'Saving...';
+                
+                saveTimeout = setTimeout(() => {
+                    saveIndicator.textContent = 'All changes saved';
+                }, 1000);
+            });
+        });
+
+        // Reset and regenerate buttons
+        document.querySelectorAll('.btn-icon').forEach(button => {
+            button.addEventListener('click', function() {
+                const isReset = this.title === 'Reset to original';
+                const action = isReset ? 'reset' : 'regenerate';
+                
+                if (confirm(`Are you sure you want to ${action} this response?`)) {
+                    console.log(`${action} response`);
+                }
+            });
+        });
+
+        // Finalize button
+        document.getElementById('finalizeBtn').addEventListener('click', function() {
+            if (!this.disabled) {
+                alert('Proceeding to Phase 4: Finalization & Publishing');
+            }
+        });
+
+        // Initialize the interface
+        updateReviewProgress();
+        updateMarkButton();
+        checkAllReviewed();
+    </script>
+</body>
+</html> class="question-title">What core principles and priorities guide your organization's mission and vision?</div>
+                            <div class="question-actions">
+                                <button class="btn-icon" title="Reset to original">
+                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/>
+                                    </svg>
+                                </button>
+                                <button class="btn-icon" title="Regenerate response">
+                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        <div class="question-content">
+                            <div class="generated-response">
+                                <div class="response-label">
+                                    AI-Generated Response
+                                    <span class="ai-badge">AI</span>
+                                </div>
+                                <textarea class="textarea">Our organization is guided by four core principles that form the foundation of everything we do: Innovation with Purpose, where we leverage cutting-edge technology to solve real-world problems; Inclusive Excellence, ensuring that diversity and accessibility are at the heart of our operations; Sustainable Impact, focusing on long-term solutions that benefit both communities and the environment; and Collaborative Leadership, fostering partnerships that amplify our collective impact. These principles directly inform our mission to democratize access to educational technology while maintaining the highest standards of ethical practice and community engagement.</textarea>
+                            </div>
+                            
+                            <div class="source-info">
+                                <div class="source-label">Generated from sources:</div>
+                                <ul class="source-list">
+                                    <li>• VIBED - Executive Leadership Survey (Sarah Johnson)</li>
+                                    <li>• VIBED - Board Member Assessment (Michael Chen)</li>
+                                    <li>• Mission & Values Statement</li>
+                                    <li>• Strategic Plan 2024-2027</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Question 2 -->
+                    <div class="question-section">
+                        <div class="question-header">
+                            <div class="question-title">How are these values reflected in both internal culture and external communications?</div>
+                            <div class="question-actions">
+                                <button class="btn-icon" title="Reset to original">
+                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/>
+                                    </svg>
+                                </button>
+                                <button class="btn-icon" title="Regenerate response">
+                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="question-content">
+                            <div class="generated-response">
+                                <div class="response-label">
+                                    AI-Generated Response
+                                    <span class="ai-badge">AI</span>
+                                </div>
+                                <textarea class="textarea">Internally, our values manifest through structured initiatives and cultural practices. Innovation with Purpose drives our quarterly hackathons and cross-functional project teams that tackle community challenges. Inclusive Excellence is reflected in our diverse hiring practices, mentorship programs, and accessibility-first design principles in all our work. Sustainable Impact guides our decision-making processes, from vendor selection to project prioritization, with every initiative evaluated for long-term community benefit. Collaborative Leadership is embedded in our flat organizational structure and consensus-building meeting formats.
+
+Externally, these values are communicated through transparent reporting on our community impact metrics, partnerships with local organizations that align with our mission, and thought leadership content that emphasizes ethical technology practices. Our marketing materials consistently highlight real community outcomes rather than just technological capabilities, and our social media presence focuses on amplifying community voices and collaborative achievements.</textarea>
+                            </div

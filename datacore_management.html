@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataCore Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8fafc;
+            color: #334155;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-content h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .header-content p {
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        .btn-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 0.5rem;
+        }
+
+        .datacore-grid {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .grid-header {
+            background: #f8fafc;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #e2e8f0;
+            display: grid;
+            grid-template-columns: 200px 120px 150px 200px 200px 1fr 120px;
+            gap: 1rem;
+            font-weight: 600;
+            color: #374151;
+            font-size: 0.9rem;
+        }
+
+        .grid-row {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #f1f5f9;
+            display: grid;
+            grid-template-columns: 200px 120px 150px 200px 200px 1fr 120px;
+            gap: 1rem;
+            align-items: center;
+            transition: background 0.2s;
+        }
+
+        .grid-row:hover {
+            background: #f8fafc;
+        }
+
+        .grid-row.current {
+            background: linear-gradient(135deg, #ecfdf5 0%, #f0fdf4 100%);
+            border-left: 4px solid #10b981;
+        }
+
+        .version-cell {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .status-current {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-archived {
+            background: #f1f5f9;
+            color: #64748b;
+        }
+
+        .date-cell {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .notes-cell {
+            color: #4b5563;
+            font-size: 0.9rem;
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .actions-cell {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            padding: 0.5rem;
+            border: none;
+            background: transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            color: #64748b;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-btn:hover {
+            background: #f1f5f9;
+        }
+
+        .action-btn.export:hover {
+            color: #3b82f6;
+            background: #eff6ff;
+        }
+
+        .action-btn.delete:hover {
+            color: #dc2626;
+            background: #fef2f2;
+        }
+
+        .action-btn.set-current:hover {
+            color: #10b981;
+            background: #ecfdf5;
+        }
+
+        .action-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .action-btn:disabled:hover {
+            background: transparent;
+            color: #64748b;
+        }
+
+        .action-icon {
+            width: 16px;
+            height: 16px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #64748b;
+        }
+
+        .empty-state svg {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 1rem auto;
+            opacity: 0.5;
+        }
+
+        .stats-bar {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1e293b;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #64748b;
+            margin-top: 0.25rem;
+        }
+
+        .confirmation-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 1rem auto;
+            color: #dc2626;
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-text {
+            color: #64748b;
+            margin-bottom: 2rem;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        @media (max-width: 1024px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .stats-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .grid-header,
+            .grid-row {
+                grid-template-columns: 1fr;
+                gap: 0.5rem;
+            }
+            
+            .grid-header {
+                display: none;
+            }
+            
+            .grid-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <h1>DataCore Management</h1>
+                <p>Manage and track all published versions of your organizational DataCore</p>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-secondary">
+                    <svg class="btn-icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                    </svg>
+                    Export Current
+                </button>
+                <a href="#" class="btn btn-primary">
+                    <svg class="btn-icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd"/>
+                    </svg>
+                    Generate New DataCore
+                </a>
+            </div>
+        </div>
+
+        <!-- Statistics Bar -->
+        <div class="stats-bar">
+            <div class="stat-item">
+                <span class="stat-number">5</span>
+                <div class="stat-label">Total DataCores</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">1</span>
+                <div class="stat-label">Current Version</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">4</span>
+                <div class="stat-label">Archived Versions</div>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">Mar 25, 2024</span>
+                <div class="stat-label">Last Published</div>
+            </div>
+        </div>
+
+        <!-- DataCore Grid -->
+        <div class="datacore-grid">
+            <div class="grid-header">
+                <div>Version</div>
+                <div>Status</div>
+                <div>Published Date</div>
+                <div>Published By</div>
+                <div>Created Date</div>
+                <div>Version Notes</div>
+                <div>Actions</div>
+            </div>
+
+            <!-- Current DataCore (newly published) -->
+            <div class="grid-row current" data-version="v1.0">
+                <div class="version-cell">v1.0</div>
+                <div><span class="status-badge status-current">Current</span></div>
+                <div class="date-cell">Mar 25, 2024</div>
+                <div class="date-cell">System Generated</div>
+                <div class="date-cell">Mar 25, 2024</div>
+                <div class="notes-cell">Initial DataCore generation based on comprehensive organizational assessment. Incorporates 4 leadership questionnaires and 5 strategic documents.</div>
+                <div class="actions-cell">
+                    <button class="action-btn export" title="Export DataCore" onclick="exportDataCore('v1.0')">
+                        <svg class="action-icon" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                        </svg>
+                    </button>
+                    <button class="action-btn delete" disabled title="Cannot delete current version">
+                        <svg class="action-icon" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" clip-rule="evenodd"/>
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 012 0v4a1 1 0 11-2 0V7zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V7a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Archived DataCores -->
+            <div class="grid-row" data-version="v0.4">
+                <div class="version-cell">v0.4</div>
+                <div><span class="status-badge status-archived">Archived</span></div>
+                <div class="date-cell">Mar 18, 2024</div>
+                <div class="date-cell">Sarah Johnson</div>
+                <div class="date-cell">Mar 15, 2024</div>
+                <div class="notes-cell">Updated SPOKE component with new service delivery models and stakeholder feedback integration.</div>
+                <div class="actions-cell">
+                    <button class="action-btn export" title="Export DataCore" onclick="exportDataCore('v0.4')">
+                        <svg class="action-icon" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                        </svg>
+                    </button>
+                    <button class="action-btn set-current" title="Set as current version" onclick="setAsCurrent('v0.4')">
+                        <svg class="action-icon" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                    </button>
+                    <button class="action-btn delete" title="Delete version" onclick="confirmDelete('v0.4')">
+                        <svg class="action-icon" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" clip-rule="evenodd"/>
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 012 0v4a1 1 0 11-2 0V7zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V7a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid-row" data-version="v0.3">
+                <div class="version-cell">v0.3</div>
+                <div><span class="status-badge status-archived">Archived</span></div>
+                <div class="date-cell">Feb 28, 2024</div>
+                <div class="date-cell">Michael Chen</div>
+                <div class="date-cell">Feb 25, 2024</div>
+                <div class="notes-cell">Major revision incorporating board feedback and expanded ECHOS analysis.</div>
+                <div class="actions-cell">
+                    <button class="action-btn export" title="Export DataCore" onclick="exportDataCore('v0.3')">
+                        <svg class="action-icon" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                        </svg>
+                    </button>
+                    <button class="action-btn set-current" title="Set as current version" onclick="setAsCurrent('v0.3')">
+                        <svg class="action-icon" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                    </button>
+                    <button class="action-btn delete" title="Delete version" onclick="confirmDelete('v0.3')">
+                        <svg class="action-icon" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" clip-rule="evenodd"/>
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 012 0v4a1 1 0 11-2 0V7zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V7a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid-row" data-version="v0.2">
+                <div class="version-cell">v0.2</div>
+                <div><span class="status-badge status-archived">Archived</span></div>
+                <div class="date-cell">Feb 14, 2024</div>
+                <div class="date-cell">Emma Rodriguez</div>
+                <div class="date-cell">Feb 10, 2024</div>
+                <div class="notes-cell">Enhanced VIBED section with additional stakeholder input and refined values framework.</div>
+                <div class="actions-cell">
+                    <button class="action-btn export" title="Export DataCore" onclick="exportDataCore('v0.2')">
+                        <svg class="action-icon" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                        </svg>
+                    </button>
+                    <button class="action-btn set-current" title="Set as current version" onclick="setAsCurrent('v0.2')">
+                        <svg class="action-icon" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                    </button>
+                    <button class="action-btn delete" title="Delete version" onclick="confirmDelete('v0.2')">
+                        <svg class="action-icon" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" clip-rule="evenodd"/>
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 012 0v4a1 1 0 11-2 0V7zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V7a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid-row" data-version="v0.1">
+                <div class="version-cell">v0.1</div>
+                <div><span class="status-badge status-archived">Archived</span></div>
+                <div class="date-cell">Jan 30, 2024</div>
+                <div class="date-cell">David Kim</div>
+                <div class="date-cell">Jan 25, 2024</div>
+                <div class="notes-cell">Initial beta version for internal review and testing. Baseline framework implementation.</div>
+                <div class="actions-cell">
+                    <button class="action-btn export" title="Export DataCore" onclick="exportDataCore('v0.1')">
+                        <svg class="action-icon" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd"/>
+                        </svg>
+                    </button>
+                    <button class="action-btn set-current" title="Set as current version" onclick="setAsCurrent('v0.1')">
+                        <svg class="action-icon" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                        </svg>
+                    </button>
+                    <button class="action-btn delete" title="Delete version" onclick="confirmDelete('v0.1')">
+                        <svg class="action-icon" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" clip-rule="evenodd"/>
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 012 0v4a1 1 0 11-2 0V7zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V7a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="confirmation-modal" id="confirmationModal">
+        <div class="modal-content">
+            <svg class="modal-icon" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" clip-rule="evenodd"/>
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 012 0v4a1 1 0 11-2 0V7zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V7a1 1 0 00-1-1z" clip-rule="evenodd"/>
+            </svg>
+            <div class="modal-title">Delete DataCore Version</div>
+            <div class="modal-text">Are you sure you want to delete this DataCore version? This action cannot be undone.</div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn" style="background: #dc2626; color: white;" onclick="confirmDeleteAction()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let deleteTarget = null;
+
+        // Export DataCore function
+        function exportDataCore(version) {
+            // Simulate export functionality
+            alert(`Exporting DataCore ${version}...`);
+            // In real implementation, this would trigger download
+        }
+
+        // Set as current function
+        function setAsCurrent(version) {
+            if (confirm(`Set DataCore ${version} as the current active version?`)) {
+                // Find current row and update
+                const currentRow = document.querySelector('.grid-row.current');
+                if (currentRow) {
+                    currentRow.classList.remove('current');
+                    const currentBadge = currentRow.querySelector('.status-badge');
+                    currentBadge.textContent = 'Archived';
+                    currentBadge.classList.remove('status-current');
+                    currentBadge.classList.add('status-archived');
+                    
+                    // Enable delete button for previously current version
+                    const deleteBtn = currentRow.querySelector('.action-btn.delete');
+                    deleteBtn.disabled = false;
+                    deleteBtn.title = 'Delete version';
+                }
+                
+                // Set new current
+                const newCurrentRow = document.querySelector(`[data-version="${version}"]`);
+                newCurrentRow.classList.add('current');
+                const newBadge = newCurrentRow.querySelector('.status-badge');
+                newBadge.textContent = 'Current';
+                newBadge.classList.remove('status-archived');
+                newBadge.classList.add('status-current');
+                
+                // Disable delete button for new current version
+                const newDeleteBtn = newCurrentRow.querySelector('.action-btn.delete');
+                newDeleteBtn.disabled = true;
+                newDeleteBtn.title = 'Cannot delete current version';
+                
+                // Update statistics
+                updateStatistics();
+                
+                alert(`DataCore ${version} is now the current active version.`);
+            }
+        }
+
+        // Confirm delete function
+        function confirmDelete(version) {
+            deleteTarget = version;
+            document.getElementById('confirmationModal').style.display = 'flex';
+        }
+
+        // Close modal function
+        function closeModal() {
+            document.getElementById('confirmationModal').style.display = 'none';
+            deleteTarget = null;
+        }
+
+        // Confirm delete action
+        function confirmDeleteAction() {
+            if (deleteTarget) {
+                const rowToDelete = document.querySelector(`[data-version="${deleteTarget}"]`);
+                if (rowToDelete) {
+                    rowToDelete.remove();
+                    updateStatistics();
+                    alert(`DataCore ${deleteTarget} has been deleted.`);
+                }
+            }
+            closeModal();
+        }
+
+        // Update statistics
+        function updateStatistics() {
+            const totalRows = document.querySelectorAll('.grid-row').length;
+            const currentCount = document.querySelectorAll('.status-current').length;
+            const archivedCount = document.querySelectorAll('.status-archived').length;
+            
+            document.querySelector('.stat-item:nth-child(1) .stat-number').textContent = totalRows;
+            document.querySelector('.stat-item:nth-child(2) .stat-number').textContent = currentCount;
+            document.querySelector('.stat-item:nth-child(3) .stat-number').textContent = archivedCount;
+        }
+
+        // Export current DataCore (header button)
+        document.querySelector('.btn-secondary').addEventListener('click', function() {
+            const currentVersion = document.querySelector('.grid-row.current .version-cell').textContent;
+            exportDataCore(currentVersion);
+        });
+
+        // Generate new DataCore (header button)
+        document.querySelector('.btn-primary').addEventListener('click', function(e) {
+            e.preventDefault();
+            if (confirm('Start generating a new DataCore? This will guide you through the complete generation process.')) {
+                // In real implementation, this would redirect to Phase 1
+                alert('Redirecting to DataCore generation workflow...');
+            }
+        });
+
+        // Close modal when clicking outside
+        document.getElementById('confirmationModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

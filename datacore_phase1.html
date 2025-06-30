@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generate DataCore - Setup</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f8fafc;
+            color: #334155;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #3b82f6;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+
+        .progress-bar {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-steps {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+        }
+
+        .step-number {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 0.75rem;
+            font-weight: 600;
+        }
+
+        .step.active .step-number {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .step.inactive .step-number {
+            background: #e2e8f0;
+            color: #64748b;
+        }
+
+        .step-connector {
+            flex: 1;
+            height: 2px;
+            background: #e2e8f0;
+            margin: 0 1rem;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .card h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .card h2 .icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 0.75rem;
+        }
+
+        .data-overview {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .component-card {
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            transition: all 0.2s;
+        }
+
+        .component-card.valid {
+            border-color: #10b981;
+            background: #f0fdf4;
+        }
+
+        .component-card.warning {
+            border-color: #f59e0b;
+            background: #fffbeb;
+        }
+
+        .component-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .component-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+        .stat {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .stat-value {
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-valid {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .status-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .selection-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .selection-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #f1f5f9;
+            transition: background 0.2s;
+        }
+
+        .selection-item:hover {
+            background: #f8fafc;
+        }
+
+        .selection-item:last-child {
+            border-bottom: none;
+        }
+
+        .checkbox {
+            width: 20px;
+            height: 20px;
+            margin-right: 1rem;
+            accent-color: #3b82f6;
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-name {
+            font-weight: 500;
+            margin-bottom: 0.25rem;
+        }
+
+        .item-meta {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .selection-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563eb;
+        }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        .btn-large {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+        }
+
+        .actions {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .alert {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .alert-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 0.75rem;
+            color: #d97706;
+        }
+
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .data-overview {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Generate DataCore</h1>
+            <p>Consolidate your organizational questionnaires into a comprehensive DataCore framework</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div class="progress-steps">
+                <div class="step active">
+                    <div class="step-number">1</div>
+                    <span>Setup & Selection</span>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step inactive">
+                    <div class="step-number">2</div>
+                    <span>LLM Processing</span>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step inactive">
+                    <div class="step-number">3</div>
+                    <span>Review & Refine</span>
+                </div>
+                <div class="step-connector"></div>
+                <div class="step inactive">
+                    <div class="step-number">4</div>
+                    <span>Finalize & Publish</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Grid -->
+        <div class="content-grid">
+            <!-- Data Availability Dashboard -->
+            <div class="card">
+                <h2>
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                    </svg>
+                    Available Data Overview
+                </h2>
+                
+                <div class="data-overview">
+                    <div class="component-card valid">
+                        <div class="component-name">VIBED</div>
+                        <div class="component-stats">
+                            <span class="stat">Responses: <span class="stat-value">4</span></span>
+                            <span class="status-badge status-valid">Ready</span>
+                        </div>
+                        <div class="stat">Last updated: 2 days ago</div>
+                    </div>
+                    
+                    <div class="component-card valid">
+                        <div class="component-name">ECHOS</div>
+                        <div class="component-stats">
+                            <span class="stat">Responses: <span class="stat-value">3</span></span>
+                            <span class="status-badge status-valid">Ready</span>
+                        </div>
+                        <div class="stat">Last updated: 1 week ago</div>
+                    </div>
+                    
+                    <div class="component-card warning">
+                        <div class="component-name">SPOKE</div>
+                        <div class="component-stats">
+                            <span class="stat">Responses: <span class="stat-value">1</span></span>
+                            <span class="status-badge status-warning">Limited</span>
+                        </div>
+                        <div class="stat">Last updated: 3 weeks ago</div>
+                    </div>
+                    
+                    <div class="component-card valid">
+                        <div class="component-name">P5</div>
+                        <div class="component-stats">
+                            <span class="stat">Responses: <span class="stat-value">2</span></span>
+                            <span class="status-badge status-valid">Ready</span>
+                        </div>
+                        <div class="stat">Last updated: 5 days ago</div>
+                    </div>
+                </div>
+
+                <div class="alert">
+                    <svg class="alert-icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                    </svg>
+                    <span>SPOKE has limited data. Consider collecting additional responses for more comprehensive results.</span>
+                </div>
+            </div>
+
+            <!-- Questionnaire Selection -->
+            <div class="card">
+                <h2>
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Select Questionnaire Responses
+                </h2>
+                
+                <div class="selection-controls">
+                    <button class="btn btn-secondary">Select All</button>
+                    <button class="btn btn-secondary">Deselect All</button>
+                </div>
+                
+                <div class="selection-list">
+                    <div class="selection-item">
+                        <input type="checkbox" class="checkbox" checked>
+                        <div class="item-info">
+                            <div class="item-name">VIBED - Executive Leadership Survey</div>
+                            <div class="item-meta">Completed: Mar 15, 2024 • Respondent: Sarah Johnson</div>
+                        </div>
+                    </div>
+                    
+                    <div class="selection-item">
+                        <input type="checkbox" class="checkbox" checked>
+                        <div class="item-info">
+                            <div class="item-name">VIBED - Board Member Assessment</div>
+                            <div class="item-meta">Completed: Mar 12, 2024 • Respondent: Michael Chen</div>
+                        </div>
+                    </div>
+                    
+                    <div class="selection-item">
+                        <input type="checkbox" class="checkbox" checked>
+                        <div class="item-info">
+                            <div class="item-name">VIBED - Staff Culture Survey</div>
+                            <div class="item-meta">Completed: Mar 8, 2024 • Respondent: Emma Rodriguez</div>
+                        </div>
+                    </div>
+                    
+                    <div class="selection-item">
+                        <input type="checkbox" class="checkbox" checked>
+                        <div class="item-info">
+                            <div class="item-name">ECHOS - Partnership Review</div>
+                            <div class="item-meta">Completed: Mar 10, 2024 • Respondent: David Kim</div>
+                        </div>
+                    </div>
+                    
+                    <div class="selection-item">
+                        <input type="checkbox" class="checkbox" checked>
+                        <div class="item-info">
+                            <div class="item-name">P5 - Operations Assessment</div>
+                            <div class="item-meta">Completed: Mar 14, 2024 • Respondent: Lisa Thompson</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Document Selection -->
+        <div class="card">
+            <h2>
+                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                Select Organizational Documents
+            </h2>
+            
+            <div class="selection-controls">
+                <button class="btn btn-secondary">Select All</button>
+                <button class="btn btn-secondary">Deselect All</button>
+            </div>
+            
+            <div class="selection-list">
+                <div class="selection-item">
+                    <input type="checkbox" class="checkbox" checked>
+                    <div class="item-info">
+                        <div class="item-name">Strategic Plan 2024-2027</div>
+                        <div class="item-meta">PDF • 2.3 MB • Uploaded: Feb 28, 2024</div>
+                    </div>
+                </div>
+                
+                <div class="selection-item">
+                    <input type="checkbox" class="checkbox" checked>
+                    <div class="item-info">
+                        <div class="item-name">Mission & Values Statement</div>
+                        <div class="item-meta">DOCX • 156 KB • Uploaded: Jan 15, 2024</div>
+                    </div>
+                </div>
+                
+                <div class="selection-item">
+                    <input type="checkbox" class="checkbox" checked>
+                    <div class="item-info">
+                        <div class="item-name">2023 Annual Report</div>
+                        <div class="item-meta">PDF • 4.7 MB • Uploaded: Mar 1, 2024</div>
+                    </div>
+                </div>
+                
+                <div class="selection-item">
+                    <input type="checkbox" class="checkbox" checked>
+                    <div class="item-info">
+                        <div class="item-name">Board Meeting Minutes - Q1 2024</div>
+                        <div class="item-meta">PDF • 890 KB • Uploaded: Mar 20, 2024</div>
+                    </div>
+                </div>
+                
+                <div class="selection-item">
+                    <input type="checkbox" class="checkbox">
+                    <div class="item-info">
+                        <div class="item-name">HR Policies Manual</div>
+                        <div class="item-meta">PDF • 1.2 MB • Uploaded: Dec 10, 2023</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="actions">
+            <p style="margin-bottom: 1.5rem; color: #64748b;">Ready to begin DataCore generation? This process will take approximately 10-15 minutes to complete.</p>
+            <button class="btn btn-primary btn-large">Start DataCore Generation</button>
+        </div>
+    </div>
+
+    <script>
+        // Add interactivity for checkboxes and buttons
+        document.querySelectorAll('.btn-secondary').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const container = this.closest('.card');
+                const checkboxes = container.querySelectorAll('.checkbox');
+                const selectAll = this.textContent === 'Select All';
+                
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = selectAll;
+                });
+            });
+        });
+
+        // Start generation button
+        document.querySelector('.btn-primary.btn-large').addEventListener('click', function() {
+            // This would navigate to Phase 2 in the actual implementation
+            alert('DataCore generation would begin here - proceeding to Phase 2');
+        });
+    </script>
+</body>
+</html>
